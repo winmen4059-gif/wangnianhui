@@ -168,32 +168,101 @@
 
     function startGame() {
 
-      const employeeNo =
-        document.getElementById("employeeNo").value.trim();
+  const employeeNo =
+    document.getElementById("employeeNo").value.trim();
 
-      const message =
-        document.getElementById("message");
+  const message =
+    document.getElementById("message");
+
+  // 沒有輸入工號
+  if (!employeeNo) {
+
+    message.innerText =
+      "請先輸入員工工號";
+
+    return;
+  }
+
+  // 暫時記住工號
+  sessionStorage.setItem(
+    "employeeNo",
+    employeeNo
+  );
+
+  // 進入第 1 關
+  showMission(1);
+}
 
 
-      if (!employeeNo) {
+function showMission(missionNumber) {
 
-        message.innerText =
-          "請先輸入員工工號";
+  const container =
+    document.querySelector(".container");
 
-        return;
-      }
+  container.innerHTML = `
+
+    <div class="logo">🎯</div>
+
+    <h1>第 ${missionNumber} 關</h1>
+
+    <div class="subtitle">
+      準備開始第 ${missionNumber} 關！
+    </div>
+
+    <div class="user">
+      工號：
+      ${sessionStorage.getItem("employeeNo")}
+    </div>
+
+    <p>
+      這裡之後會放第 ${missionNumber} 關的遊戲內容。
+    </p>
+
+    <button onclick="completeMission(${missionNumber})">
+      ✅ 完成第 ${missionNumber} 關
+    </button>
+
+  `;
+}
 
 
-      message.innerText =
-        "🎮 闖關功能準備中...";
+function completeMission(missionNumber) {
+
+  if (missionNumber < 6) {
+
+    // 進入下一關
+    showMission(missionNumber + 1);
+
+  } else {
+
+    // 六關全部完成
+    showCompleted();
+
+  }
+}
 
 
-      // 下一階段會在這裡加入：
-      // 1. 員工資料驗證
-      // 2. 闖關紀錄
-      // 3. 第 1 關
+function showCompleted() {
 
-    }
+  const container =
+    document.querySelector(".container");
+
+  container.innerHTML = `
+
+    <div class="logo">🎊</div>
+
+    <h1>恭喜完成！</h1>
+
+    <div class="subtitle">
+      你已完成全部 6 關闖關！
+    </div>
+
+    <div class="user">
+      🎉 恭喜取得抽獎資格！
+    </div>
+
+  `;
+}
 
 
     initLIFF();
