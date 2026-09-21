@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>旺年會闖關</title>
+
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Noto Sans TC",
+        Arial,
+        sans-serif;
+
+      background: linear-gradient(
+        135deg,
+        #fff4d6,
+        #ffe4ec
+      );
+
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #333;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 420px;
+      background: white;
+      border-radius: 24px;
+      padding: 32px 24px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    }
+
+    .logo {
+      font-size: 64px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      color: #d9485f;
+      margin: 10px 0;
+    }
+
+    .subtitle {
+      color: #777;
+      margin-bottom: 25px;
+    }
+
+    .user {
+      background: #f7f7f7;
+      padding: 12px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 16px;
+      margin-bottom: 15px;
+    }
+
+    button {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 12px;
+      background: #06c755;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    .loading {
+      color: #888;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <div class="logo">🎉</div>
+
+    <h1>旺年會闖關</h1>
+
+    <div class="subtitle">
+      歡迎參加今年的旺年會活動！
+    </div>
+
+    <div class="user" id="userInfo">
+      LINE 登入中...
+    </div>
+
+    <input
+      type="text"
+      id="employeeNo"
+      placeholder="請輸入員工工號"
+    >
+
+    <button onclick="startGame()">
+      🚀 開始闖關
+    </button>
+
+    <div class="loading" id="message"></div>
+
+  </div>
+
+  <script>
+
+    const LIFF_ID = "2011685953-o8qvyQfR";
+
+    async function initLIFF() {
+
+      try {
+
+        await liff.init({
+          liffId: LIFF_ID
+        });
+
+        if (!liff.isLoggedIn()) {
+
+          liff.login();
+
+          return;
+        }
+
+        const profile = await liff.getProfile();
+
+        document.getElementById("userInfo").innerHTML =
+          "你好，<strong>" +
+          profile.displayName +
+          "</strong> 👋";
+
+      } catch (error) {
+
+        console.error(error);
+
+        document.getElementById("userInfo").innerText =
+          "LINE 登入失敗";
+
+      }
+    }
+
+
+    function startGame() {
+
+      const employeeNo =
+        document.getElementById("employeeNo").value.trim();
+
+      const message =
+        document.getElementById("message");
+
+
+      if (!employeeNo) {
+
+        message.innerText =
+          "請先輸入員工工號";
+
+        return;
+      }
+
+
+      message.innerText =
+        "🎮 闖關功能準備中...";
+
+
+      // 下一階段會在這裡加入：
+      // 1. 員工資料驗證
+      // 2. 闖關紀錄
+      // 3. 第 1 關
+
+    }
+
+
+    initLIFF();
+
+  </script>
+
+</body>
+</html>
