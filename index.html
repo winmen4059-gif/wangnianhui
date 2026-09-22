@@ -501,10 +501,6 @@ async function initLIFF() {
       "LINE ID Token 已取得"
     );
 
-    console.log(
-      idToken
-    );
-
 
     // ==========================================
     // 4. 取得 LINE Profile
@@ -549,9 +545,8 @@ async function initLIFF() {
     //await verifyLineToken(
       //idToken
     //);
-console.log(
-  "LINE ID Token 已取得"
-);
+// ⭐ 這裡真的呼叫後端
+await verifyLineToken(idToken);
 
 console.log(
   idToken
