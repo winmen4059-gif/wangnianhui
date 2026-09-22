@@ -228,17 +228,217 @@ function showMission(missionNumber) {
 
 function completeMission(missionNumber) {
 
-  if (missionNumber < 6) {
+  if (missionNumber === 1) {
+    startMission1();
+    return;
+  }
 
-    // 進入下一關
+  if (missionNumber < 6) {
     showMission(missionNumber + 1);
+    return;
+  }
+
+  showCompleted();
+}
+
+function startMission1() {
+
+  const container =
+    document.querySelector(".container");
+
+  container.innerHTML = `
+
+    <div class="logo">🎯</div>
+
+    <h1>第 1 關｜旺年會知識王</h1>
+
+    <div class="subtitle">
+      3 題答對 2 題即可過關
+    </div>
+
+    <div id="questionArea"></div>
+
+  `;
+
+  showQuestion1();
+}
+
+
+let question1Index = 0;
+let question1Correct = 0;
+
+
+const mission1Questions = [
+
+  {
+    question: "公司的旺年會最重要的是什麼？",
+    options: [
+      "一起同樂",
+      "一直工作",
+      "提早下班"
+    ],
+    answer: 0
+  },
+
+  {
+    question: "參加闖關活動時，最重要的是？",
+    options: [
+      "遵守活動規則",
+      "直接跳關",
+      "幫別人代答"
+    ],
+    answer: 0
+  },
+
+  {
+    question: "完成 6 關之後，可以取得什麼？",
+    options: [
+      "抽獎資格",
+      "公司股票",
+      "一個月假期"
+    ],
+    answer: 0
+  }
+
+];
+
+
+function showQuestion1() {
+
+  const q =
+    mission1Questions[question1Index];
+
+  const area =
+    document.getElementById("questionArea");
+
+  area.innerHTML = `
+
+    <div style="
+      background:#f7f7f7;
+      padding:20px;
+      border-radius:15px;
+      margin-bottom:20px;
+    ">
+
+      <div style="
+        color:#888;
+        margin-bottom:10px;
+      ">
+        第 ${question1Index + 1} / 3 題
+      </div>
+
+      <h2>${q.question}</h2>
+
+    </div>
+
+    ${q.options.map((option, index) => `
+
+      <button
+        onclick="answerQuestion1(${index})"
+        style="
+          margin-bottom:12px;
+          background:#06c755;
+        "
+      >
+        ${option}
+      </button>
+
+    `).join("")}
+
+    <div id="answerMessage"
+         style="margin-top:15px;">
+    </div>
+
+  `;
+}
+
+
+function answerQuestion1(selected) {
+
+  const q =
+    mission1Questions[question1Index];
+
+  const message =
+    document.getElementById("answerMessage");
+
+  if (selected === q.answer) {
+
+    question1Correct++;
+
+    message.innerHTML =
+      "✅ 答對了！";
 
   } else {
 
-    // 六關全部完成
-    showCompleted();
+    message.innerHTML =
+      "❌ 答錯了！";
 
   }
+
+  setTimeout(() => {
+
+    question1Index++;
+
+    if (question1Index >= 3) {
+
+      finishMission1();
+
+    } else {
+
+      showQuestion1();
+
+    }
+
+  }, 700);
+}
+
+
+function finishMission1() {
+
+  const container =
+    document.querySelector(".container");
+
+  if (question1Correct >= 2) {
+
+    container.innerHTML = `
+
+      <div class="logo">🎉</div>
+
+      <h1>第 1 關完成！</h1>
+
+      <p>
+        答對 ${question1Correct} / 3 題
+      </p>
+
+      <button onclick="showMission(2)">
+        ▶️ 前往第 2 關
+      </button>
+
+    `;
+
+  } else {
+
+    question1Index = 0;
+    question1Correct = 0;
+
+    container.innerHTML = `
+
+      <div class="logo">💪</div>
+
+      <h1>再試一次！</h1>
+
+      <p>
+        需要答對 2 題才能過關。
+      </p>
+
+      <button onclick="startMission1()">
+        🔄 重新挑戰
+      </button>
+
+    `;
+
+  }
+
 }
 
 
