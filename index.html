@@ -2,8 +2,13 @@
 <html lang="zh-TW">
 
 <head>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
   <title>旺年會闖關</title>
 
@@ -16,7 +21,9 @@
     }
 
     body {
+
       margin: 0;
+
       font-family:
         -apple-system,
         BlinkMacSystemFont,
@@ -24,59 +31,83 @@
         Arial,
         sans-serif;
 
-      background: linear-gradient(
-        135deg,
-        #fff4d6,
-        #ffe4ec
-      );
+      background:
+        linear-gradient(
+          135deg,
+          #fff4d6,
+          #ffe4ec
+        );
 
       min-height: 100vh;
 
       display: flex;
+
       justify-content: center;
+
       align-items: center;
 
       color: #333;
     }
 
+
     .container {
+
       width: 90%;
+
       max-width: 420px;
 
       background: white;
 
       border-radius: 24px;
 
-      padding: 32px 24px;
+      padding: 30px 22px;
 
       text-align: center;
 
       box-shadow:
-        0 10px 30px rgba(0,0,0,0.12);
+        0 10px 30px
+        rgba(0,0,0,0.12);
     }
+
 
     .logo {
-      font-size: 64px;
-      margin-bottom: 10px;
+
+      font-size: 60px;
+
+      margin-bottom: 8px;
     }
+
 
     h1 {
+
       color: #d9485f;
+
       margin: 10px 0;
+
+      font-size: 26px;
     }
 
+
     h2 {
+
       font-size: 20px;
+
       line-height: 1.5;
     }
 
+
     .subtitle {
+
       color: #777;
-      margin-bottom: 25px;
+
+      margin-bottom: 20px;
+
       line-height: 1.6;
     }
 
+
     .user {
+
       background: #f7f7f7;
 
       padding: 12px;
@@ -86,7 +117,9 @@
       margin-bottom: 20px;
     }
 
+
     input {
+
       width: 100%;
 
       padding: 15px;
@@ -100,10 +133,12 @@
       margin-bottom: 15px;
     }
 
+
     button {
+
       width: 100%;
 
-      padding: 16px;
+      padding: 15px;
 
       border: none;
 
@@ -113,54 +148,224 @@
 
       color: white;
 
-      font-size: 18px;
+      font-size: 17px;
 
       font-weight: bold;
 
       cursor: pointer;
 
       margin-bottom: 10px;
+
+      transition: 0.15s;
     }
+
 
     button:active {
-      transform: scale(0.98);
+
+      transform: scale(0.97);
     }
 
-    .loading {
-      color: #888;
-      margin-top: 15px;
+
+    button:disabled {
+
+      background: #aaa;
+
+      cursor: not-allowed;
     }
+
+
+    .secondary {
+
+      background: #777;
+    }
+
 
     .question-box {
+
       background: #f7f7f7;
 
-      padding: 20px;
+      padding: 18px;
 
       border-radius: 15px;
 
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }
+
 
     .question-number {
+
       color: #888;
 
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
-    .answer-message {
-      margin-top: 15px;
+
+    .message {
+
+      min-height: 28px;
+
+      margin-top: 12px;
 
       font-weight: bold;
 
-      min-height: 25px;
+      line-height: 1.5;
     }
 
+
     .success {
+
       color: #06a847;
     }
 
+
     .error {
+
       color: #d9485f;
+    }
+
+
+    /* =========================
+       第 3 關：記憶配對
+       ========================= */
+
+    .memory-grid {
+
+      display: grid;
+
+      grid-template-columns:
+        repeat(4, 1fr);
+
+      gap: 10px;
+
+      margin: 20px 0;
+    }
+
+
+    .memory-card {
+
+      aspect-ratio: 1 / 1;
+
+      padding: 0;
+
+      margin: 0;
+
+      background: #ff6b81;
+
+      border-radius: 12px;
+
+      font-size: 30px;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      min-height: 60px;
+    }
+
+
+    .memory-card.open {
+
+      background: #fff4d6;
+
+      color: #333;
+    }
+
+
+    .memory-card.matched {
+
+      background: #06c755;
+
+    }
+
+
+    /* =========================
+       第 4 關
+       ========================= */
+
+    .find-grid {
+
+      display: grid;
+
+      grid-template-columns:
+        repeat(3, 1fr);
+
+      gap: 10px;
+
+      margin: 20px 0;
+    }
+
+
+    .find-item {
+
+      background: #f7f7f7;
+
+      color: #333;
+
+      font-size: 34px;
+
+      min-height: 75px;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      border: 2px solid #eee;
+    }
+
+
+    /* =========================
+       第 5 關
+       ========================= */
+
+    .reaction-area {
+
+      min-height: 220px;
+
+      border-radius: 20px;
+
+      background: #eee;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      margin: 20px 0;
+
+      font-size: 36px;
+
+      font-weight: bold;
+    }
+
+
+    .reaction-area.waiting {
+
+      background: #ffe0e0;
+
+      color: #d9485f;
+    }
+
+
+    .reaction-area.go {
+
+      background: #c8ffd9;
+
+      color: #06a847;
+
+    }
+
+
+    .small {
+
+      font-size: 14px;
+
+      color: #888;
+
     }
 
   </style>
@@ -170,800 +375,2049 @@
 
 <body>
 
-  <div class="container" id="app">
 
-    <div class="logo">🎉</div>
+<div
+  class="container"
+  id="app"
+>
 
-    <h1>旺年會闖關</h1>
+  <div class="logo">
+    🎉
+  </div>
 
-    <div class="subtitle">
-      歡迎參加今年的旺年會活動！
-    </div>
 
-    <div class="user" id="userInfo">
-      LINE 登入中...
-    </div>
+  <h1>
+    旺年會闖關
+  </h1>
 
-    <input
-      type="text"
-      id="employeeNo"
-      placeholder="請輸入員工工號"
-    >
 
-    <button onclick="startGame()">
-      🚀 開始闖關
-    </button>
+  <div class="subtitle">
 
-    <div class="loading" id="message"></div>
+    歡迎參加今年的旺年會活動！
 
   </div>
 
 
-  <script>
+  <div
+    class="user"
+    id="userInfo"
+  >
 
-    // ==========================================
-    // LINE LIFF
-    // ==========================================
+    LINE 登入中...
 
-    const LIFF_ID = "2011685953-o8qvyQfR";
-
-
-    async function initLIFF() {
-
-      try {
-
-        await liff.init({
-          liffId: LIFF_ID
-        });
+  </div>
 
 
-        if (!liff.isLoggedIn()) {
-
-          liff.login();
-
-          return;
-        }
-
-
-        const profile =
-          await liff.getProfile();
+  <input
+    type="text"
+    id="employeeNo"
+    placeholder="請輸入員工工號"
+  >
 
 
-        document.getElementById(
-          "userInfo"
-        ).innerHTML =
-          "你好，<strong>" +
-          profile.displayName +
-          "</strong> 👋";
+  <button
+    onclick="startGame()"
+  >
+
+    🚀 開始闖關
+
+  </button>
 
 
-      } catch (error) {
+  <div
+    class="message"
+    id="message"
+  ></div>
 
-        console.error(error);
+</div>
 
 
-        document.getElementById(
-          "userInfo"
-        ).innerText =
-          "LINE 登入失敗";
 
-      }
+<script>
 
+
+// ==================================================
+// LINE LIFF
+// ==================================================
+
+const LIFF_ID =
+  "2011685953-o8qvyQfR";
+
+
+
+async function initLIFF() {
+
+  try {
+
+    await liff.init({
+
+      liffId: LIFF_ID
+
+    });
+
+
+    if (!liff.isLoggedIn()) {
+
+      liff.login();
+
+      return;
     }
 
 
-
-    // ==========================================
-    // 開始闖關
-    // ==========================================
-
-    function startGame() {
-
-      const employeeNo =
-        document
-          .getElementById("employeeNo")
-          .value
-          .trim();
+    const profile =
+      await liff.getProfile();
 
 
-      const message =
-        document.getElementById("message");
+    document.getElementById(
+      "userInfo"
+    ).innerHTML =
+
+      "你好，<strong>" +
+
+      profile.displayName +
+
+      "</strong> 👋";
 
 
-      if (!employeeNo) {
+    // 暫時保存 LINE 使用者資料
 
-        message.innerText =
-          "請先輸入員工工號";
-
-        return;
-      }
-
-
-      // 暫時保存工號
-      sessionStorage.setItem(
-        "employeeNo",
-        employeeNo
-      );
+    sessionStorage.setItem(
+      "lineDisplayName",
+      profile.displayName
+    );
 
 
-      // 從第 1 關開始
-      showMission(1);
-
-    }
-
-
-
-    // ==========================================
-    // 關卡總入口
-    // ==========================================
-
-    function showMission(missionNumber) {
+    sessionStorage.setItem(
+      "lineUserId",
+      profile.userId
+    );
 
 
-      // 第 1 關
-      if (missionNumber === 1) {
+  } catch (error) {
 
-        startMission1();
-
-        return;
-      }
+    console.error(error);
 
 
-      // 第 2 關
-      if (missionNumber === 2) {
+    document.getElementById(
+      "userInfo"
+    ).innerText =
 
-        startMission2();
+      "LINE 登入失敗";
 
-        return;
-      }
+  }
 
-
-      // 第 3～6 關暫時畫面
-      showTemporaryMission(
-        missionNumber
-      );
-
-    }
+}
 
 
 
-    // ==========================================
-    // 第 1 關
-    // 旺年會知識王
-    // ==========================================
+// ==================================================
+// 開始遊戲
+// ==================================================
 
-    let question1Index = 0;
-
-    let question1Correct = 0;
+function startGame() {
 
 
-    const mission1Questions = [
-
-      {
-        question:
-          "公司的旺年會最重要的是什麼？",
-
-        options: [
-          "一起同樂",
-          "一直工作",
-          "提早下班"
-        ],
-
-        answer: 0
-      },
+  const employeeNo =
+    document
+      .getElementById(
+        "employeeNo"
+      )
+      .value
+      .trim();
 
 
-      {
-        question:
-          "參加闖關活動時，最重要的是？",
-
-        options: [
-          "遵守活動規則",
-          "直接跳關",
-          "幫別人代答"
-        ],
-
-        answer: 0
-      },
+  const message =
+    document.getElementById(
+      "message"
+    );
 
 
-      {
-        question:
-          "完成 6 關之後，可以取得什麼？",
+  if (!employeeNo) {
 
-        options: [
-          "抽獎資格",
-          "公司股票",
-          "一個月假期"
-        ],
+    message.innerHTML =
 
-        answer: 0
-      }
+      `<span class="error">
+        請先輸入員工工號
+      </span>`;
 
+    return;
+  }
+
+
+  sessionStorage.setItem(
+    "employeeNo",
+    employeeNo
+  );
+
+
+  // 從第 1 關開始
+
+  showMission(1);
+
+}
+
+
+
+// ==================================================
+// 關卡總入口
+// ==================================================
+
+function showMission(
+  missionNumber
+) {
+
+
+  if (missionNumber === 1) {
+
+    startMission1();
+
+    return;
+  }
+
+
+  if (missionNumber === 2) {
+
+    startMission2();
+
+    return;
+  }
+
+
+  if (missionNumber === 3) {
+
+    startMission3();
+
+    return;
+  }
+
+
+  if (missionNumber === 4) {
+
+    startMission4();
+
+    return;
+  }
+
+
+  if (missionNumber === 5) {
+
+    startMission5();
+
+    return;
+  }
+
+
+  if (missionNumber === 6) {
+
+    startMission6();
+
+    return;
+  }
+
+}
+
+
+
+// ==================================================
+// 第 1 關
+// 旺年會知識王
+// ==================================================
+
+let question1Index = 0;
+
+let question1Correct = 0;
+
+
+const mission1Questions = [
+
+  {
+
+    question:
+      "公司的旺年會最重要的是什麼？",
+
+    options: [
+
+      "一起同樂",
+
+      "一直工作",
+
+      "提早下班"
+
+    ],
+
+    answer: 0
+
+  },
+
+
+  {
+
+    question:
+      "參加闖關活動時，最重要的是？",
+
+    options: [
+
+      "遵守活動規則",
+
+      "直接跳關",
+
+      "幫別人代答"
+
+    ],
+
+    answer: 0
+
+  },
+
+
+  {
+
+    question:
+      "完成 6 關之後，可以取得什麼？",
+
+    options: [
+
+      "抽獎資格",
+
+      "公司股票",
+
+      "一個月假期"
+
+    ],
+
+    answer: 0
+
+  }
+
+];
+
+
+
+function startMission1() {
+
+
+  question1Index = 0;
+
+  question1Correct = 0;
+
+
+  const container =
+    document.getElementById(
+      "app"
+    );
+
+
+  container.innerHTML = `
+
+    <div class="logo">
+      🎯
+    </div>
+
+    <h1>
+      第 1 關｜旺年會知識王
+    </h1>
+
+    <div class="subtitle">
+
+      3 題答對 2 題即可過關
+
+    </div>
+
+    <div id="questionArea"></div>
+
+  `;
+
+
+  showQuestion1();
+
+}
+
+
+
+function showQuestion1() {
+
+
+  const q =
+    mission1Questions[
+      question1Index
     ];
 
 
-
-    function startMission1() {
-
-      question1Index = 0;
-
-      question1Correct = 0;
+  const area =
+    document.getElementById(
+      "questionArea"
+    );
 
 
-      const container =
-        document.getElementById("app");
+  area.innerHTML = `
+
+    <div class="question-box">
+
+      <div class="question-number">
+
+        第
+        ${question1Index + 1}
+        / 3 題
+
+      </div>
+
+      <h2>
+        ${q.question}
+      </h2>
+
+    </div>
 
 
-      container.innerHTML = `
+    ${q.options.map(
+      (option, index) => `
 
-        <div class="logo">
-          🎯
-        </div>
+        <button
+          onclick="
+            answerQuestion1(${index})
+          "
+        >
 
-        <h1>
-          第 1 關｜旺年會知識王
-        </h1>
+          ${option}
 
-        <div class="subtitle">
-          3 題答對 2 題即可過關
-        </div>
+        </button>
 
-        <div id="questionArea"></div>
+      `
+    ).join("")}
 
-      `;
 
+    <div
+      id="answerMessage"
+      class="message"
+    ></div>
+
+  `;
+
+}
+
+
+
+function answerQuestion1(
+  selected
+) {
+
+
+  const q =
+    mission1Questions[
+      question1Index
+    ];
+
+
+  const message =
+    document.getElementById(
+      "answerMessage"
+    );
+
+
+  const buttons =
+    document.querySelectorAll(
+      "#questionArea button"
+    );
+
+
+  buttons.forEach(
+    button => {
+
+      button.disabled = true;
+
+    }
+  );
+
+
+  if (
+    selected === q.answer
+  ) {
+
+    question1Correct++;
+
+
+    message.innerHTML =
+
+      `<span class="success">
+        ✅ 答對了！
+      </span>`;
+
+  } else {
+
+    message.innerHTML =
+
+      `<span class="error">
+        ❌ 答錯了！
+      </span>`;
+
+  }
+
+
+  setTimeout(() => {
+
+
+    question1Index++;
+
+
+    if (
+      question1Index >=
+      mission1Questions.length
+    ) {
+
+      finishMission1();
+
+    } else {
 
       showQuestion1();
 
     }
 
 
+  }, 700);
 
-    function showQuestion1() {
+}
 
-      const q =
-        mission1Questions[
-          question1Index
-        ];
+
+
+function finishMission1() {
+
+
+  const container =
+    document.getElementById(
+      "app"
+    );
+
+
+  if (
+    question1Correct >= 2
+  ) {
+
+
+    container.innerHTML = `
+
+      <div class="logo">
+        🎉
+      </div>
+
+      <h1>
+        第 1 關完成！
+      </h1>
+
+      <p>
+
+        答對
+        ${question1Correct}
+        / 3 題
+
+      </p>
+
+
+      <button
+        onclick="showMission(2)"
+      >
+
+        ▶️ 前往第 2 關
+
+      </button>
+
+    `;
+
+
+  } else {
+
+
+    container.innerHTML = `
+
+      <div class="logo">
+        💪
+      </div>
+
+      <h1>
+        再試一次！
+      </h1>
+
+      <p>
+
+        答對至少 2 題才能過關。
+
+      </p>
+
+
+      <button
+        onclick="startMission1()"
+      >
+
+        🔄 重新挑戰
+
+      </button>
+
+    `;
+
+  }
+
+}
+
+
+
+// ==================================================
+// 第 2 關
+// 猜數字
+// ==================================================
+
+let mission2Number = 0;
+
+let mission2Attempts = 0;
+
+
+
+function startMission2() {
+
+
+  mission2Number =
+    Math.floor(
+      Math.random() * 10
+    ) + 1;
+
+
+  mission2Attempts = 0;
+
+
+  renderMission2();
+
+}
+
+
+
+function renderMission2() {
+
+
+  const container =
+    document.getElementById(
+      "app"
+    );
+
+
+  container.innerHTML = `
+
+    <div class="logo">
+      🎲
+    </div>
+
+    <h1>
+      第 2 關｜幸運猜數字
+    </h1>
+
+
+    <div class="subtitle">
+
+      猜出 1～10 的幸運數字
+
+      <br>
+
+      你有 3 次機會
+
+    </div>
+
+
+    <input
+      type="number"
+      id="guessNumber"
+      min="1"
+      max="10"
+      placeholder="請輸入 1～10"
+    >
+
+
+    <button
+      onclick="checkMission2()"
+    >
+
+      🎯 猜！
+
+    </button>
+
+
+    <div
+      id="mission2Message"
+      class="message"
+    ></div>
+
+
+    <p>
+
+      剩餘機會：
+
+      ${3 - mission2Attempts}
+
+    </p>
+
+  `;
+
+}
+
+
+
+function checkMission2() {
+
+
+  const input =
+    document.getElementById(
+      "guessNumber"
+    );
+
+
+  const guess =
+    Number(input.value);
+
+
+  const message =
+    document.getElementById(
+      "mission2Message"
+    );
+
+
+  if (
+    !Number.isInteger(guess) ||
+    guess < 1 ||
+    guess > 10
+  ) {
+
+    message.innerText =
+      "請輸入 1～10 的整數";
+
+    return;
+
+  }
+
+
+  mission2Attempts++;
+
+
+  if (
+    guess === mission2Number
+  ) {
+
+    showMission2Success();
+
+    return;
+
+  }
+
+
+  if (
+    mission2Attempts >= 3
+  ) {
+
+    showMission2Failed();
+
+    return;
+
+  }
+
+
+  if (
+    guess < mission2Number
+  ) {
+
+    message.innerText =
+      "⬆️ 太小了，再試一次！";
+
+  } else {
+
+    message.innerText =
+      "⬇️ 太大了，再試一次！";
+
+  }
+
+
+  setTimeout(() => {
+
+    renderMission2();
+
+  }, 700);
+
+}
+
+
+
+function showMission2Success() {
+
+
+  const container =
+    document.getElementById(
+      "app"
+    );
+
+
+  container.innerHTML = `
+
+    <div class="logo">
+      🎉
+    </div>
+
+    <h1>
+      第 2 關完成！
+    </h1>
+
+    <p>
+      你猜中了幸運數字！
+    </p>
+
+
+    <button
+      onclick="showMission(3)"
+    >
+
+      ▶️ 前往第 3 關
+
+    </button>
+
+  `;
+
+}
+
+
+
+function showMission2Failed() {
+
+
+  const container =
+    document.getElementById(
+      "app"
+    );
+
+
+  container.innerHTML = `
+
+    <div class="logo">
+      😅
+    </div>
+
+    <h1>
+      差一點！
+
+    </h1>
+
+    <p>
+      這次沒有猜中。
+    </p>
+
+
+    <button
+      onclick="startMission2()"
+    >
+
+      🔄 再挑戰一次
+
+    </button>
+
+  `;
+
+}
+
+
+
+// ==================================================
+// 第 3 關
+// 記憶配對
+// ==================================================
+
+let memoryCards = [];
+
+let memoryFirst = null;
+
+let memorySecond = null;
+
+let memoryLock = false;
+
+let memoryMatched = 0;
+
+
+
+function startMission3() {
+
+
+  const symbols = [
+
+    "🍎",
+    "🍎",
+
+    "🍊",
+    "🍊",
+
+    "🍇",
+    "🍇",
+
+    "🍉",
+    "🍉"
+
+  ];
+
+
+  memoryCards =
+    symbols
+      .map(
+        (symbol, index) => ({
+
+          id: index,
+
+          symbol: symbol,
+
+          open: false,
+
+          matched: false
+
+        })
+      );
+
+
+  memoryCards.sort(
+    () =>
+      Math.random() - 0.5
+  );
+
+
+  memoryFirst = null;
+
+  memorySecond = null;
+
+  memoryLock = false;
+
+  memoryMatched = 0;
+
+
+  renderMission3();
+
+}
+
+
+
+function renderMission3() {
+
+
+  const container =
+    document.getElementById(
+      "app"
+    );
+
+
+  container.innerHTML = `
+
+    <div class="logo">
+      🧠
+    </div>
+
+    <h1>
+      第 3 關｜記憶配對
+    </h1>
+
+
+    <div class="subtitle">
+
+      找出 4 組相同圖案
+
+    </div>
+
+
+    <div class="memory-grid">
+
+      ${memoryCards.map(
+        (card, index) => `
+
+          <button
+
+            class="
+              memory-card
+              ${
+                card.open
+                  ? "open"
+                  : ""
+              }
+              ${
+                card.matched
+                  ? "matched"
+                  : ""
+              }
+            "
+
+            onclick="
+              flipMemoryCard(
+                ${index}
+              )
+            "
+
+          >
+
+            ${
+              card.open ||
+              card.matched
+                ? card.symbol
+                : "❓"
+            }
+
+          </button>
+
+        `
+      ).join("")}
+
+    </div>
+
+
+    <div class="message">
+
+      已完成：
+
+      ${memoryMatched}
+      / 4 組
+
+    </div>
+
+  `;
+
+}
+
+
+
+function flipMemoryCard(
+  index
+) {
+
+
+  if (memoryLock) {
+
+    return;
+
+  }
+
+
+  const card =
+    memoryCards[index];
+
+
+  if (
+    card.open ||
+    card.matched
+  ) {
+
+    return;
+
+  }
+
+
+  card.open = true;
+
+
+  if (
+    memoryFirst === null
+  ) {
+
+    memoryFirst = index;
+
+    renderMission3();
+
+    return;
+
+  }
+
+
+  memorySecond = index;
+
+  memoryLock = true;
+
+  renderMission3();
+
+
+  const first =
+    memoryCards[
+      memoryFirst
+    ];
+
+
+  const second =
+    memoryCards[
+      memorySecond
+    ];
+
+
+  setTimeout(() => {
+
+
+    if (
+      first.symbol ===
+      second.symbol
+    ) {
+
+
+      first.matched = true;
+
+      second.matched = true;
+
+      memoryMatched++;
+
+
+    } else {
+
+
+      first.open = false;
+
+      second.open = false;
+
+    }
+
+
+    memoryFirst = null;
+
+    memorySecond = null;
+
+    memoryLock = false;
+
+
+    if (
+      memoryMatched >= 4
+    ) {
+
+      finishMission3();
+
+    } else {
+
+      renderMission3();
+
+    }
+
+
+  }, 700);
+
+}
+
+
+
+function finishMission3() {
+
+
+  const container =
+    document.getElementById(
+      "app"
+    );
+
+
+  container.innerHTML = `
+
+    <div class="logo">
+      🎉
+    </div>
+
+    <h1>
+      第 3 關完成！
+    </h1>
+
+    <p>
+      記憶力不錯！
+    </p>
+
+
+    <button
+      onclick="showMission(4)"
+    >
+
+      ▶️ 前往第 4 關
+
+    </button>
+
+  `;
+
+}
+
+
+
+// ==================================================
+// 第 4 關
+// 找不同
+// ==================================================
+
+function startMission4() {
+
+
+  const correctIndex =
+    Math.floor(
+      Math.random() * 9
+    );
+
+
+  window.mission4Correct =
+    correctIndex;
+
+
+  const container =
+    document.getElementById(
+      "app"
+    );
+
+
+  container.innerHTML = `
+
+    <div class="logo">
+      🔍
+    </div>
+
+    <h1>
+      第 4 關｜找不同
+    </h1>
+
+
+    <div class="subtitle">
+
+      找出唯一不同的圖案
+
+    </div>
+
+
+    <div class="find-grid">
+
+      ${Array.from(
+        { length: 9 },
+        (_, index) => `
+
+          <button
+
+            class="find-item"
+
+            onclick="
+              checkMission4(
+                ${index}
+              )
+            "
+
+          >
+
+            ${
+              index ===
+              correctIndex
+                ? "🍊"
+                : "🍎"
+            }
+
+          </button>
+
+        `
+      ).join("")}
+
+    </div>
+
+
+    <div
+      id="mission4Message"
+      class="message"
+    ></div>
+
+  `;
+
+}
+
+
+
+function checkMission4(
+  selected
+) {
+
+
+  const message =
+    document.getElementById(
+      "mission4Message"
+    );
+
+
+  if (
+    selected ===
+    window.mission4Correct
+  ) {
+
+
+    message.innerHTML =
+
+      `<span class="success">
+        🎉 找到了！
+      </span>`;
+
+
+    setTimeout(() => {
+
+      finishMission4();
+
+    }, 700);
+
+
+  } else {
+
+
+    message.innerHTML =
+
+      `<span class="error">
+        ❌ 不是這個，再找找看！
+      </span>`;
+
+  }
+
+}
+
+
+
+function finishMission4() {
+
+
+  const container =
+    document.getElementById(
+      "app"
+    );
+
+
+  container.innerHTML = `
+
+    <div class="logo">
+      🎉
+    </div>
+
+    <h1>
+      第 4 關完成！
+    </h1>
+
+    <p>
+      你的眼力很厲害！
+    </p>
+
+
+    <button
+      onclick="showMission(5)"
+    >
+
+      ▶️ 前往第 5 關
+
+    </button>
+
+  `;
+
+}
+
+
+
+// ==================================================
+// 第 5 關
+// 反應力挑戰
+// ==================================================
+
+let reactionTimer = null;
+
+let reactionStartTime = 0;
+
+let reactionCanClick = false;
+
+
+
+function startMission5() {
+
+
+  reactionCanClick = false;
+
+  reactionStartTime = 0;
+
+
+  const container =
+    document.getElementById(
+      "app"
+    );
+
+
+  container.innerHTML = `
+
+    <div class="logo">
+      ⚡
+    </div>
+
+    <h1>
+      第 5 關｜反應力挑戰
+    </h1>
+
+
+    <div class="subtitle">
+
+      等待畫面變成 GO
+
+      <br>
+
+      然後立刻按下按鈕！
+
+    </div>
+
+
+    <div
+      id="reactionArea"
+      class="reaction-area waiting"
+    >
+
+      WAIT...
+
+    </div>
+
+
+    <button
+      id="reactionButton"
+      onclick="reactionClick()"
+    >
+
+      等待 GO
+
+    </button>
+
+
+    <div
+      id="reactionMessage"
+      class="message"
+    ></div>
+
+  `;
+
+
+  // 隨機等待 2～5 秒
+
+  const delay =
+    2000 +
+    Math.random() * 3000;
+
+
+  reactionTimer =
+    setTimeout(() => {
+
+
+      reactionCanClick =
+        true;
+
+
+      reactionStartTime =
+        performance.now();
 
 
       const area =
         document.getElementById(
-          "questionArea"
+          "reactionArea"
         );
 
 
-      area.innerHTML = `
-
-        <div class="question-box">
-
-          <div class="question-number">
-
-            第
-            ${question1Index + 1}
-            / 3 題
-
-          </div>
-
-          <h2>
-            ${q.question}
-          </h2>
-
-        </div>
-
-
-        ${q.options.map(
-          (option, index) => `
-
-            <button
-              onclick="
-                answerQuestion1(${index})
-              "
-            >
-              ${option}
-            </button>
-
-          `
-        ).join("")}
-
-
-        <div
-          id="answerMessage"
-          class="answer-message"
-        ></div>
-
-      `;
-
-    }
-
-
-
-    function answerQuestion1(selected) {
-
-      const q =
-        mission1Questions[
-          question1Index
-        ];
-
-
-      const message =
+      const button =
         document.getElementById(
-          "answerMessage"
+          "reactionButton"
         );
 
 
-      // 暫時禁止重複點擊
-      const buttons =
-        document.querySelectorAll(
-          "#questionArea button"
-        );
+      area.className =
+        "reaction-area go";
 
 
-      buttons.forEach(
-        button => {
-          button.disabled = true;
-        }
+      area.innerText =
+        "GO!";
+
+
+      button.innerText =
+        "⚡ 快按！";
+
+
+    }, delay);
+
+}
+
+
+
+function reactionClick() {
+
+
+  const message =
+    document.getElementById(
+      "reactionMessage"
+    );
+
+
+  // 太早按
+
+  if (!reactionCanClick) {
+
+
+    clearTimeout(
+      reactionTimer
+    );
+
+
+    message.innerHTML =
+
+      `<span class="error">
+        ❌ 太早了！重新挑戰。
+      </span>`;
+
+
+    setTimeout(() => {
+
+      startMission5();
+
+    }, 800);
+
+
+    return;
+
+  }
+
+
+  const reactionTime =
+    Math.round(
+      performance.now() -
+      reactionStartTime
+    );
+
+
+  reactionCanClick = false;
+
+
+  if (
+    reactionTime <= 1000
+  ) {
+
+
+    showMission5Success(
+      reactionTime
+    );
+
+
+  } else {
+
+
+    const message =
+      document.getElementById(
+        "reactionMessage"
       );
 
 
-      if (selected === q.answer) {
+    message.innerHTML =
 
-        question1Correct++;
+      `<span class="error">
+        ${reactionTime} ms
+        <br>
+        再快一點！
+      </span>`;
 
 
-        message.innerHTML =
-          `<span class="success">
-            ✅ 答對了！
-          </span>`;
+    setTimeout(() => {
 
-      } else {
+      startMission5();
 
-        message.innerHTML =
-          `<span class="error">
-            ❌ 答錯了！
-          </span>`;
+    }, 1200);
 
-      }
+  }
 
+}
 
-      setTimeout(() => {
 
-        question1Index++;
 
+function showMission5Success(
+  time
+) {
 
-        if (
-          question1Index >=
-          mission1Questions.length
-        ) {
 
-          finishMission1();
+  const container =
+    document.getElementById(
+      "app"
+    );
 
-        } else {
 
-          showQuestion1();
+  container.innerHTML = `
 
-        }
+    <div class="logo">
+      ⚡
+    </div>
 
-      }, 700);
+    <h1>
+      第 5 關完成！
+    </h1>
 
-    }
+    <p>
 
+      你的反應時間：
 
+      <strong>
+        ${time} ms
+      </strong>
 
-    function finishMission1() {
+    </p>
 
-      const container =
-        document.getElementById("app");
 
+    <button
+      onclick="showMission(6)"
+    >
 
-      if (question1Correct >= 2) {
+      ▶️ 前往第 6 關
 
-        container.innerHTML = `
+    </button>
 
-          <div class="logo">
-            🎉
-          </div>
+  `;
 
-          <h1>
-            第 1 關完成！
-          </h1>
+}
 
-          <p>
-            答對
-            ${question1Correct}
-            / 3 題
-          </p>
 
-          <button
-            onclick="showMission(2)"
-          >
-            ▶️ 前往第 2 關
-          </button>
 
-        `;
+// ==================================================
+// 第 6 關
+// 最終挑戰
+// ==================================================
 
-      } else {
+let question6Index = 0;
 
-        container.innerHTML = `
+let question6Correct = 0;
 
-          <div class="logo">
-            💪
-          </div>
 
-          <h1>
-            再試一次！
-          </h1>
+const mission6Questions = [
 
-          <p>
-            答對至少 2 題才能過關。
-          </p>
+  {
 
-          <button
-            onclick="startMission1()"
-          >
-            🔄 重新挑戰
-          </button>
+    question:
+      "旺年會闖關共有幾關？",
 
-        `;
+    options: [
 
-      }
+      "4 關",
 
-    }
+      "5 關",
 
+      "6 關"
 
+    ],
 
-    // ==========================================
-    // 第 2 關
-    // 猜數字
-    // ==========================================
+    answer: 2
 
-    let mission2Number = 0;
+  },
 
-    let mission2Attempts = 0;
 
+  {
 
-    function startMission2() {
+    question:
+      "闖關時應該遵守什麼？",
 
-      mission2Number =
-        Math.floor(
-          Math.random() * 10
-        ) + 1;
+    options: [
 
+      "活動規則",
 
-      mission2Attempts = 0;
+      "自己訂規則",
 
+      "跳過所有關卡"
 
-      renderMission2();
+    ],
 
-    }
+    answer: 0
 
+  },
 
 
-    function renderMission2() {
+  {
 
-      const container =
-        document.getElementById("app");
+    question:
+      "第 3 關主要考驗什麼？",
 
+    options: [
 
-      container.innerHTML = `
+      "記憶力",
 
-        <div class="logo">
-          🎲
-        </div>
+      "跑步速度",
 
-        <h1>
-          第 2 關｜幸運猜數字
-        </h1>
+      "唱歌"
 
-        <div class="subtitle">
+    ],
 
-          猜出 1～10 的幸運數字
+    answer: 0
 
-          <br>
+  },
 
-          你有 3 次機會
 
-        </div>
+  {
 
+    question:
+      "第 5 關主要考驗什麼？",
 
-        <input
-          type="number"
-          id="guessNumber"
-          min="1"
-          max="10"
-          placeholder="請輸入 1～10"
-        >
+    options: [
 
+      "反應速度",
 
-        <button
-          onclick="checkMission2()"
-        >
-          🎯 猜！
-        </button>
+      "數學",
 
+      "畫畫"
 
-        <div
-          id="mission2Message"
-          class="answer-message"
-        ></div>
+    ],
 
+    answer: 0
 
-        <p>
+  },
 
-          剩餘機會：
 
-          ${3 - mission2Attempts}
+  {
 
-        </p>
+    question:
+      "完成全部 6 關後可以取得什麼？",
 
-      `;
+    options: [
 
-    }
+      "抽獎資格",
 
+      "直接放假",
 
+      "公司股票"
 
-    function checkMission2() {
+    ],
 
-      const input =
-        document.getElementById(
-          "guessNumber"
-        );
+    answer: 0
 
+  }
 
-      const guess =
-        Number(input.value);
+];
 
 
-      const message =
-        document.getElementById(
-          "mission2Message"
-        );
 
+function startMission6() {
 
-      if (
-        !Number.isInteger(guess) ||
-        guess < 1 ||
-        guess > 10
-      ) {
 
-        message.innerText =
-          "請輸入 1～10 的整數";
+  question6Index = 0;
 
-        return;
-      }
+  question6Correct = 0;
 
 
-      mission2Attempts++;
+  const container =
+    document.getElementById(
+      "app"
+    );
 
 
-      if (
-        guess === mission2Number
-      ) {
+  container.innerHTML = `
 
-        showMission2Success();
+    <div class="logo">
+      🏆
+    </div>
 
-        return;
+    <h1>
+      第 6 關｜最終挑戰
+    </h1>
 
-      }
 
+    <div class="subtitle">
 
-      if (
-        mission2Attempts >= 3
-      ) {
+      5 題答對 3 題即可完成全部闖關！
 
-        showMission2Failed();
+    </div>
 
-        return;
 
-      }
+    <div id="question6Area"></div>
 
+  `;
 
-      if (
-        guess < mission2Number
-      ) {
 
-        message.innerText =
-          "⬆️ 太小了，再試一次！";
+  showQuestion6();
 
-      } else {
+}
 
-        message.innerText =
-          "⬇️ 太大了，再試一次！";
 
-      }
 
+function showQuestion6() {
 
-      setTimeout(() => {
 
-        renderMission2();
+  const q =
+    mission6Questions[
+      question6Index
+    ];
 
-      }, 700);
 
-    }
+  const area =
+    document.getElementById(
+      "question6Area"
+    );
 
 
+  area.innerHTML = `
 
-    function showMission2Success() {
+    <div class="question-box">
 
-      const container =
-        document.getElementById("app");
+      <div class="question-number">
 
+        第
+        ${question6Index + 1}
+        / 5 題
 
-      container.innerHTML = `
+      </div>
 
-        <div class="logo">
-          🎉
-        </div>
 
-        <h1>
-          第 2 關完成！
-        </h1>
+      <h2>
+        ${q.question}
+      </h2>
 
-        <p>
-          你猜中了幸運數字！
-        </p>
+    </div>
 
-        <button
-          onclick="showMission(3)"
-        >
-          ▶️ 前往第 3 關
-        </button>
 
-      `;
-
-    }
-
-
-
-    function showMission2Failed() {
-
-      const container =
-        document.getElementById("app");
-
-
-      container.innerHTML = `
-
-        <div class="logo">
-          😅
-        </div>
-
-        <h1>
-          差一點！
-        </h1>
-
-        <p>
-          這次沒有猜中。
-        </p>
-
-        <button
-          onclick="startMission2()"
-        >
-          🔄 再挑戰一次
-        </button>
-
-      `;
-
-    }
-
-
-
-    // ==========================================
-    // 第 3～6 關
-    // 暫時畫面
-    // ==========================================
-
-    function showTemporaryMission(
-      missionNumber
-    ) {
-
-      const container =
-        document.getElementById("app");
-
-
-      container.innerHTML = `
-
-        <div class="logo">
-          🎯
-        </div>
-
-        <h1>
-          第 ${missionNumber} 關
-        </h1>
-
-        <div class="subtitle">
-          這一關正在製作中
-        </div>
-
-        <p>
-          關卡 ${missionNumber}
-          的遊戲內容即將加入。
-        </p>
-
+    ${q.options.map(
+      (option, index) => `
 
         <button
           onclick="
-            completeMission(
-              ${missionNumber}
+            answerQuestion6(
+              ${index}
             )
           "
         >
-          🧪 測試完成本關
+
+          ${option}
+
         </button>
 
-      `;
+      `
+    ).join("")}
+
+
+    <div
+      id="question6Message"
+      class="message"
+    ></div>
+
+  `;
+
+}
+
+
+
+function answerQuestion6(
+  selected
+) {
+
+
+  const q =
+    mission6Questions[
+      question6Index
+    ];
+
+
+  const message =
+    document.getElementById(
+      "question6Message"
+    );
+
+
+  const buttons =
+    document.querySelectorAll(
+      "#question6Area button"
+    );
+
+
+  buttons.forEach(
+    button => {
+
+      button.disabled = true;
 
     }
+  );
 
 
+  if (
+    selected === q.answer
+  ) {
 
-    // ==========================================
-    // 完成關卡
-    // ==========================================
 
-    function completeMission(
-      missionNumber
+    question6Correct++;
+
+
+    message.innerHTML =
+
+      `<span class="success">
+        ✅ 答對了！
+      </span>`;
+
+
+  } else {
+
+
+    message.innerHTML =
+
+      `<span class="error">
+        ❌ 答錯了！
+      </span>`;
+
+  }
+
+
+  setTimeout(() => {
+
+
+    question6Index++;
+
+
+    if (
+      question6Index >=
+      mission6Questions.length
     ) {
 
-      if (
-        missionNumber < 6
-      ) {
+      finishMission6();
 
-        showMission(
-          missionNumber + 1
-        );
+    } else {
 
-      } else {
-
-        showCompleted();
-
-      }
+      showQuestion6();
 
     }
 
 
+  }, 700);
 
-    // ==========================================
-    // 全部完成
-    // ==========================================
-
-    function showCompleted() {
-
-      const container =
-        document.getElementById("app");
-
-
-      container.innerHTML = `
-
-        <div class="logo">
-          🎊
-        </div>
-
-        <h1>
-          恭喜完成！
-        </h1>
-
-        <div class="subtitle">
-          你已完成全部 6 關闖關！
-        </div>
-
-        <div class="user">
-          🎉 恭喜取得抽獎資格！
-        </div>
-
-      `;
-
-    }
+}
 
 
 
-    // ==========================================
-    // 啟動 LINE LIFF
-    // ==========================================
+function finishMission6() {
 
-    initLIFF();
 
-  </script>
+  const container =
+    document.getElementById(
+      "app"
+    );
+
+
+  if (
+    question6Correct >= 3
+  ) {
+
+
+    showCompleted();
+
+
+  } else {
+
+
+    container.innerHTML = `
+
+      <div class="logo">
+        💪
+      </div>
+
+      <h1>
+        最後一關差一點！
+      </h1>
+
+
+      <p>
+
+        答對
+
+        ${question6Correct}
+
+        / 5 題
+
+      </p>
+
+
+      <p>
+
+        需要答對至少 3 題才能完成。
+
+      </p>
+
+
+      <button
+        onclick="startMission6()"
+      >
+
+        🔄 重新挑戰第 6 關
+
+      </button>
+
+    `;
+
+  }
+
+}
+
+
+
+// ==================================================
+// 全部完成
+// ==================================================
+
+function showCompleted() {
+
+
+  const employeeNo =
+    sessionStorage.getItem(
+      "employeeNo"
+    );
+
+
+  const displayName =
+    sessionStorage.getItem(
+      "lineDisplayName"
+    );
+
+
+  const container =
+    document.getElementById(
+      "app"
+    );
+
+
+  container.innerHTML = `
+
+    <div class="logo">
+      🎊
+    </div>
+
+
+    <h1>
+      恭喜完成全部闖關！
+    </h1>
+
+
+    <div class="subtitle">
+
+      ${displayName || ""}
+
+      <br>
+
+      工號：
+      ${employeeNo || ""}
+
+    </div>
+
+
+    <div class="user">
+
+      🏆
+
+      <br>
+
+      <strong>
+        你已完成 6 關！
+      </strong>
+
+      <br><br>
+
+      🎉 恭喜取得抽獎資格！
+
+    </div>
+
+
+    <p class="small">
+
+      請依現場工作人員指示
+      進行後續抽獎。
+
+    </p>
+
+  `;
+
+}
+
+
+
+// ==================================================
+// 啟動 LIFF
+// ==================================================
+
+initLIFF();
+
+</script>
+
 
 </body>
 
