@@ -1,268 +1,587 @@
 // =====================================================
-// 旺年會抽獎
+// 旺年會闖關
+// Frontend
 // =====================================================
 
 
 // =====================================================
-// API 設定
+// 設定
 // =====================================================
 
-// !!! 請改成你的 ASP.NET Core API 網址 !!!
+// 正式環境請改成你的 ASP.NET Core API 網址
+const API_BASE_URL = "https://localhost:7086";
 
-const API_BASE_URL =
-    "https://newsapi.winmen.com.tw";
-
-
-// =====================================================
-// LINE LIFF
-// =====================================================
-
-const LIFF_ID =
-    "2011685953-o8qvyQfR";
+// LINE LIFF ID
+const LIFF_ID = "2011685953-o8qvyQfR";
 
 
 // =====================================================
 // DOM
 // =====================================================
 
-const loading =
-    document.getElementById("loading");
+const loadingScreen =
+    document.getElementById("loadingScreen");
 
-const error =
-    document.getElementById("error");
+const loadingText =
+    document.getElementById("loadingText");
 
-const errorMessage =
-    document.getElementById("errorMessage");
+const loginScreen =
+    document.getElementById("loginScreen");
 
-const retryButton =
-    document.getElementById("retryButton");
+const mainScreen =
+    document.getElementById("mainScreen");
+
+const employeeNoInput =
+    document.getElementById("employeeNoInput");
+
+const loginButton =
+    document.getElementById("loginButton");
+
+const loginMessage =
+    document.getElementById("loginMessage");
+
+const displayName =
+    document.getElementById("displayName");
+
+const missionProgress =
+    document.getElementById("missionProgress");
+
+const progressText =
+    document.getElementById("progressText");
+
+const progressBar =
+    document.getElementById("progressBar");
 
 const lotteryArea =
     document.getElementById("lotteryArea");
 
-const participantName =
-    document.getElementById("participantName");
+const winnerHistory =
+    document.getElementById("winnerHistory");
 
-const employeeNoElement =
-    document.getElementById("employeeNo");
+const drawOverlay =
+    document.getElementById("drawOverlay");
 
-const statusTitle =
-    document.getElementById("statusTitle");
+const drawNumber =
+    document.getElementById("drawNumber");
 
-const statusMessage =
-    document.getElementById("statusMessage");
+const drawAnimation =
+    document.getElementById("drawAnimation");
 
-const drawCard =
-    document.getElementById("drawCard");
-
-const drawButton =
-    document.getElementById("drawButton");
-
-const drawingCard =
-    document.getElementById("drawingCard");
-
-const countdown =
-    document.getElementById("countdown");
-
-const resultCard =
-    document.getElementById("resultCard");
+const resultOverlay =
+    document.getElementById("resultOverlay");
 
 const resultIcon =
     document.getElementById("resultIcon");
 
-const prizeName =
-    document.getElementById("prizeName");
+const resultTitle =
+    document.getElementById("resultTitle");
 
-const prizeDescription =
-    document.getElementById("prizeDescription");
+const resultPrize =
+    document.getElementById("resultPrize");
 
-const resultMessage =
-    document.getElementById("resultMessage");
+const resultDescription =
+    document.getElementById("resultDescription");
 
 const drawAgainButton =
     document.getElementById("drawAgainButton");
 
-const winnerList =
-    document.getElementById("winnerList");
+const closeResultButton =
+    document.getElementById("closeResultButton");
 
 
 // =====================================================
-// 全域資料
+// 使用者資料
 // =====================================================
 
 let lineUserId = "";
 
 let employeeNo = "";
 
-let lotteryStatus = null;
+let currentProfile = null;
 
 
 // =====================================================
-// 頁面開始
+// 啟動
 // =====================================================
 
 document.addEventListener(
     "DOMContentLoaded",
+    startApp
+);
+
+
+// =====================================================
+// Start
+// =====================================================
+
+async function startApp() {
+
+    try {
+
+        setLoading(
+            "正在初始化 LINE..."
+        );
+
+
+        // ---------------------------------------------
+        // 初始化 LIFF
+        // ---------------------------------------------
+
+        await liff.init({
+            liffId: LIFF_ID
+        });
+
+
+        // ---------------------------------------------
+        // LINE 登入
+        // ---------------------------------------------
+
+        if (!liff.isLoggedIn()) {
+
+            setLoading(
+                "正在開啟 LINE 登入..."
+            );
+
+            liff.login();
+
+            return;
+        }
+
+
+        // ---------------------------------------------
+        // 取得 LINE Profile
+        // ---------------------------------------------
+
+        setLoading(
+            "正在取得 LINE 使用者資料..."
+        );
+
+        currentProfile =
+            await liff.getProfile();
+
+        lineUserId =
+            currentProfile.userId;
+
+
+        // ---------------------------------------------
+        // 檢查是否已經記住工號
+        // ---------------------------------------------
+
+        const savedEmployeeNo =
+            localStorage.getItem(
+                "wangnianhui_employee_no"
+            );
+
+
+        if (savedEmployeeNo) {
+
+            employeeNo =
+                savedEmployeeNo;
+
+
+            await registerOrLogin();
+
+            return;
+        }
+
+
+        // ---------------------------------------------
+        // 顯示工號輸入
+        // ---------------------------------------------
+
+        showLogin();
+
+    }
+    catch (error) {
+
+        console.error(
+            "初始化失敗",
+            error
+        );
+
+        showLogin();
+
+        loginMessage.textContent =
+            "系統初始化失敗，請重新整理頁面。";
+    }
+}
+
+
+// =====================================================
+// Loading
+// =====================================================
+
+function setLoading(message) {
+
+    loadingText.textContent =
+        message;
+}
+
+
+// =====================================================
+// 顯示登入
+// =====================================================
+
+function showLogin() {
+
+    loadingScreen.classList.add(
+        "hidden"
+    );
+
+    loginScreen.classList.remove(
+        "hidden"
+    );
+
+    mainScreen.classList.add(
+        "hidden"
+    );
+}
+
+
+// =====================================================
+// 顯示主畫面
+// =====================================================
+
+function showMain() {
+
+    loadingScreen.classList.add(
+        "hidden"
+    );
+
+    loginScreen.classList.add(
+        "hidden"
+    );
+
+    mainScreen.classList.remove(
+        "hidden"
+    );
+}
+
+
+// =====================================================
+// Login button
+// =====================================================
+
+loginButton.addEventListener(
+    "click",
     async () => {
 
-        retryButton.addEventListener(
-            "click",
-            () => {
-                location.reload();
-            }
-        );
+        employeeNo =
+            employeeNoInput.value.trim();
+
+        if (!employeeNo) {
+
+            loginMessage.textContent =
+                "請輸入員工工號";
+
+            return;
+        }
 
 
-        drawButton.addEventListener(
-            "click",
-            startDraw
-        );
+        loginButton.disabled = true;
 
-
-        drawAgainButton.addEventListener(
-            "click",
-            startDraw
-        );
+        loginMessage.textContent =
+            "登入中...";
 
 
         try {
 
-            await initialize();
+            await registerOrLogin();
 
         }
         catch (error) {
 
             console.error(
-                "初始化失敗",
                 error
             );
 
-            showError(
+            loginMessage.textContent =
                 error.message ||
-                "初始化失敗"
-            );
-        }
+                "登入失敗";
 
+            loginButton.disabled = false;
+        }
     }
 );
 
 
 // =====================================================
-// 初始化
+// LINE + 工號登入
 // =====================================================
 
-async function initialize() {
+async function registerOrLogin() {
 
     // ---------------------------------------------
-    // 初始化 LINE LIFF
+    // 取得 LINE ID Token
     // ---------------------------------------------
 
-    await liff.init({
-        liffId: LIFF_ID
-    });
+    const idToken =
+        liff.getIDToken();
 
 
-    // ---------------------------------------------
-    // 確認登入
-    // ---------------------------------------------
-
-    if (!liff.isLoggedIn()) {
-
-        liff.login();
-
-        return;
-    }
-
-
-    // ---------------------------------------------
-    // 取得 LINE Profile
-    // ---------------------------------------------
-
-    const profile =
-        await liff.getProfile();
-
-
-    lineUserId =
-        profile.userId;
-
-
-    // ---------------------------------------------
-    // 取得工號
-    // ---------------------------------------------
-
-    employeeNo =
-        getEmployeeNo();
-
-
-    if (!employeeNo) {
+    if (!idToken) {
 
         throw new Error(
-            "找不到員工工號，請先完成登入與工號登記。"
+            "無法取得 LINE ID Token，請重新開啟 LINE。"
         );
     }
 
 
     // ---------------------------------------------
-    // 查詢抽獎狀態
+    // 呼叫後端 register
     // ---------------------------------------------
 
-    await loadLotteryStatus();
+    const response =
+        await fetch(
+            `${API_BASE_URL}/api/auth/register`,
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body: JSON.stringify({
+                    idToken,
+                    employeeNo
+                })
+            }
+        );
+
+
+    const data =
+        await response.json();
+
+
+    if (!response.ok ||
+        !data.success) {
+
+        throw new Error(
+            data.message ||
+            "登入失敗"
+        );
+    }
+
+
+    // ---------------------------------------------
+    // 儲存工號
+    // ---------------------------------------------
+
+    localStorage.setItem(
+        "wangnianhui_employee_no",
+        employeeNo
+    );
+
+
+    // ---------------------------------------------
+    // 顯示主畫面
+    // ---------------------------------------------
+
+    showMain();
+
+
+    displayName.textContent =
+        `${data.displayName || ""}　工號：${employeeNo}`;
+
+
+    // ---------------------------------------------
+    // 載入遊戲
+    // ---------------------------------------------
+
+    await loadGame();
+
 }
 
 
 // =====================================================
-// 從 URL / localStorage 取得工號
+// 載入遊戲
 // =====================================================
 
-function getEmployeeNo() {
+async function loadGame() {
 
-    // ---------------------------------------------
-    // 1. URL
-    // ---------------------------------------------
+    try {
 
-    const params =
-        new URLSearchParams(
-            window.location.search
-        );
+        setMainLoading();
 
 
-    const urlEmployeeNo =
-        params.get("employeeNo");
+        // ---------------------------------------------
+        // 查詢進度
+        // ---------------------------------------------
+
+        await loadProgress();
 
 
-    if (urlEmployeeNo) {
+        // ---------------------------------------------
+        // 查詢抽獎狀態
+        // ---------------------------------------------
 
-        localStorage.setItem(
-            "employeeNo",
-            urlEmployeeNo
-        );
+        await loadLotteryStatus();
 
-        return urlEmployeeNo.trim();
     }
+    catch (error) {
 
-
-    // ---------------------------------------------
-    // 2. localStorage
-    // ---------------------------------------------
-
-    const storedEmployeeNo =
-        localStorage.getItem(
-            "employeeNo"
+        console.error(
+            error
         );
 
-
-    if (storedEmployeeNo) {
-
-        return storedEmployeeNo.trim();
+        lotteryArea.innerHTML =
+            `
+            <div class="lottery-card">
+                <div class="lottery-icon">⚠️</div>
+                <div class="lottery-title">
+                    系統錯誤
+                </div>
+                <div class="lottery-description">
+                    ${escapeHtml(error.message)}
+                </div>
+            </div>
+            `;
     }
-
-
-    return "";
 }
 
 
 // =====================================================
-// 查詢抽獎狀態
+// 主畫面 Loading
+// =====================================================
+
+function setMainLoading() {
+
+    lotteryArea.innerHTML =
+        `
+        <div class="lottery-card">
+            <div class="lottery-icon">
+                🎁
+            </div>
+
+            <div class="lottery-title">
+                載入中...
+            </div>
+
+            <div class="lottery-description">
+                正在取得您的抽獎資料
+            </div>
+        </div>
+        `;
+}
+
+
+// =====================================================
+// 取得六關進度
+// =====================================================
+
+async function loadProgress() {
+
+    const url =
+        `${API_BASE_URL}/api/game/progress` +
+        `?lineUserId=${encodeURIComponent(lineUserId)}` +
+        `&employeeNo=${encodeURIComponent(employeeNo)}`;
+
+
+    const response =
+        await fetch(url);
+
+
+    const data =
+        await response.json();
+
+
+    if (!response.ok ||
+        !data.success) {
+
+        throw new Error(
+            data.message ||
+            "無法取得闖關進度"
+        );
+    }
+
+
+    renderMissions(
+        data.missions
+    );
+
+
+    progressText.textContent =
+        `${data.completedCount} / ${data.totalMissions}`;
+
+
+    const percent =
+        data.totalMissions > 0
+            ? (
+                data.completedCount /
+                data.totalMissions
+            ) * 100
+            : 0;
+
+
+    progressBar.style.width =
+        `${percent}%`;
+}
+
+
+// =====================================================
+// Render Missions
+// =====================================================
+
+function renderMissions(
+    missions
+) {
+
+    missionProgress.innerHTML = "";
+
+
+    missions.forEach(
+        mission => {
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+
+            card.className =
+                "mission-card" +
+                (
+                    mission.completed
+                        ? " completed"
+                        : ""
+                );
+
+
+            card.innerHTML =
+                `
+                <div class="mission-code">
+                    ${escapeHtml(
+                        mission.code
+                    )}
+                </div>
+
+                <div class="mission-name">
+                    ${escapeHtml(
+                        mission.name
+                    )}
+                </div>
+
+                <div class="mission-status">
+                    ${
+                        mission.completed
+                            ? "✓ 已完成"
+                            : "尚未完成"
+                    }
+                </div>
+                `;
+
+
+            missionProgress.appendChild(
+                card
+            );
+        }
+    );
+}
+
+
+// =====================================================
+// Lottery Status
 // =====================================================
 
 async function loadLotteryStatus() {
@@ -278,175 +597,157 @@ async function loadLotteryStatus() {
 
 
     const data =
-        await readJson(response);
+        await response.json();
 
 
-    if (!response.ok) {
+    if (!response.ok ||
+        !data.success) {
 
         throw new Error(
             data.message ||
-            "取得抽獎狀態失敗"
+            "無法取得抽獎狀態"
         );
     }
 
 
-    lotteryStatus =
-        data;
-
-
-    // ---------------------------------------------
-    // 顯示頁面
-    // ---------------------------------------------
-
-    loading.classList.add(
-        "hidden"
-    );
-
-    lotteryArea.classList.remove(
-        "hidden"
+    renderLottery(
+        data
     );
 
 
-    // ---------------------------------------------
-    // 參加者
-    // ---------------------------------------------
-
-    participantName.textContent =
-        data.participantName ||
-        "參加者";
-
-    employeeNoElement.textContent =
-        `工號：${employeeNo}`;
-
-
-    // ---------------------------------------------
-    // 更新狀態
-    // ---------------------------------------------
-
-    updateLotteryStatus(data);
-
-
-    // ---------------------------------------------
-    // 顯示中獎紀錄
-    // ---------------------------------------------
-
-    renderWinners(
+    renderWinnerHistory(
         data.winners || []
     );
 }
 
 
 // =====================================================
-// 更新抽獎狀態
+// Render Lottery
 // =====================================================
 
-function updateLotteryStatus(data) {
+function renderLottery(
+    data
+) {
 
-    if (!data.hasEntry) {
+    // ---------------------------------------------
+    // 沒有資格
+    // ---------------------------------------------
 
-        statusTitle.textContent =
-            "尚未取得抽獎資格";
+    if (!data.hasEntry ||
+        !data.eligible) {
 
-        statusMessage.textContent =
-            "請先完成六個闖關任務。";
+        lotteryArea.innerHTML =
+            `
+            <div class="lottery-card">
 
-        drawCard.classList.add(
-            "hidden"
-        );
+                <div class="lottery-icon">
+                    🎁
+                </div>
+
+                <div class="lottery-title">
+                    尚未取得抽獎資格
+                </div>
+
+                <div class="lottery-description">
+                    請先完成六個闖關任務，
+                    完成後即可取得抽獎資格。
+                </div>
+
+            </div>
+            `;
 
         return;
     }
 
 
-    if (!data.eligible) {
-
-        statusTitle.textContent =
-            "目前沒有抽獎資格";
-
-        statusMessage.textContent =
-            "請確認是否已完成全部六關。";
-
-        drawCard.classList.add(
-            "hidden"
-        );
-
-        return;
-    }
-
+    // ---------------------------------------------
+    // 已經不能抽
+    // ---------------------------------------------
 
     if (!data.canDraw) {
 
-        statusTitle.textContent =
-            "抽獎已完成";
+        lotteryArea.innerHTML =
+            `
+            <div class="lottery-card">
 
-        statusMessage.textContent =
-            "您已經中獎，無法再次抽獎。";
+                <div class="lottery-icon">
+                    🏆
+                </div>
 
-        drawCard.classList.add(
-            "hidden"
-        );
+                <div class="lottery-title">
+                    抽獎已完成
+                </div>
+
+                <div class="lottery-description">
+                    感謝您的參與！
+                    <br>
+                    請至下方查看您的中獎紀錄。
+                </div>
+
+            </div>
+            `;
 
         return;
     }
 
 
     // ---------------------------------------------
-    // 可以抽獎
+    // 可以抽
     // ---------------------------------------------
 
-    statusTitle.textContent =
-        "🎉 您已取得抽獎資格！";
+    lotteryArea.innerHTML =
+        `
+        <div class="lottery-card">
 
-    statusMessage.textContent =
-        "準備好就可以開始抽獎。";
+            <div class="lottery-icon">
+                🎁
+            </div>
+
+            <div class="lottery-title">
+                幸運抽獎
+            </div>
+
+            <div class="lottery-description">
+                恭喜您取得抽獎資格！
+                <br>
+                準備好迎接您的幸運獎項了嗎？
+            </div>
+
+            <button
+                id="startDrawButton"
+                class="primary-button">
+
+                🎉 開始抽獎
+
+            </button>
+
+        </div>
+        `;
 
 
-    drawCard.classList.remove(
-        "hidden"
+    const button =
+        document.getElementById(
+            "startDrawButton"
+        );
+
+
+    button.addEventListener(
+        "click",
+        drawLottery
     );
 }
 
 
 // =====================================================
-// 開始抽獎
+// Draw Lottery
 // =====================================================
 
-async function startDraw() {
+async function drawLottery() {
 
-    // ---------------------------------------------
-    // 防止連續點擊
-    // ---------------------------------------------
-
-    drawButton.disabled = true;
-
-    drawAgainButton.disabled = true;
-
-
-    // ---------------------------------------------
-    // 顯示抽獎動畫
-    // ---------------------------------------------
-
-    drawCard.classList.add(
-        "hidden"
-    );
-
-    resultCard.classList.add(
-        "hidden"
-    );
-
-    drawingCard.classList.remove(
-        "hidden"
-    );
+    showDrawAnimation();
 
 
     try {
-
-        await countdownAnimation();
-
-
-        // -----------------------------------------
-        // 呼叫後端
-        // -----------------------------------------
 
         const response =
             await fetch(
@@ -461,11 +762,9 @@ async function startDraw() {
 
                     body: JSON.stringify({
 
-                        lineUserId:
-                            lineUserId,
+                        lineUserId,
 
-                        employeeNo:
-                            employeeNo
+                        employeeNo
 
                     })
                 }
@@ -473,10 +772,13 @@ async function startDraw() {
 
 
         const data =
-            await readJson(response);
+            await response.json();
 
 
-        if (!response.ok) {
+        if (!response.ok ||
+            !data.success) {
+
+            hideDrawAnimation();
 
             throw new Error(
                 data.message ||
@@ -486,163 +788,132 @@ async function startDraw() {
 
 
         // -----------------------------------------
+        // 等動畫
+        // -----------------------------------------
+
+        await delay(
+            1800
+        );
+
+
+        hideDrawAnimation();
+
+
+        // -----------------------------------------
         // 顯示結果
         // -----------------------------------------
 
-        showDrawResult(data);
+        showPrizeResult(
+            data
+        );
 
 
         // -----------------------------------------
-        // 更新狀態
+        // 更新資料
         // -----------------------------------------
 
         await loadLotteryStatus();
 
-
     }
     catch (error) {
 
-        console.error(
-            "抽獎錯誤",
-            error
-        );
+        hideDrawAnimation();
 
 
-        drawingCard.classList.add(
-            "hidden"
-        );
-
-
-        showError(
+        alert(
             error.message ||
             "抽獎失敗"
         );
 
-    }
-    finally {
 
-        drawButton.disabled = false;
-
-        drawAgainButton.disabled = false;
+        await loadLotteryStatus();
     }
 }
 
 
 // =====================================================
-// 倒數動畫
+// Draw Animation
 // =====================================================
 
-function countdownAnimation() {
+async function showDrawAnimation() {
 
-    return new Promise(
-        resolve => {
-
-            let number = 3;
-
-            countdown.textContent =
-                number;
+    drawOverlay.classList.remove(
+        "hidden"
+    );
 
 
-            const timer =
-                setInterval(
-                    () => {
-
-                        number--;
+    drawNumber.textContent =
+        "3";
 
 
-                        if (number <= 0) {
-
-                            clearInterval(
-                                timer
-                            );
-
-                            countdown.textContent =
-                                "🎉";
-
-                            setTimeout(
-                                resolve,
-                                400
-                            );
-
-                            return;
-                        }
+    drawAnimation.textContent =
+        "🎁";
 
 
-                        countdown.textContent =
-                            number;
+    await delay(500);
 
-                    },
-                    700
-                );
-        }
+
+    drawNumber.textContent =
+        "2";
+
+    drawAnimation.textContent =
+        "✨";
+
+
+    await delay(500);
+
+
+    drawNumber.textContent =
+        "1";
+
+    drawAnimation.textContent =
+        "🎉";
+
+
+    await delay(500);
+
+
+    drawNumber.textContent =
+        "GO!";
+}
+
+
+// =====================================================
+// Hide Draw Animation
+// =====================================================
+
+function hideDrawAnimation() {
+
+    drawOverlay.classList.add(
+        "hidden"
     );
 }
 
 
 // =====================================================
-// 顯示抽獎結果
+// Show Prize
 // =====================================================
 
-function showDrawResult(data) {
-
-    drawingCard.classList.add(
-        "hidden"
-    );
-
-
-    resultCard.classList.remove(
-        "hidden"
-    );
-
+function showPrizeResult(
+    data
+) {
 
     const prize =
         data.prize;
 
 
-    if (!prize) {
-
-        prizeName.textContent =
-            "恭喜中獎！";
-
-        prizeDescription.textContent =
-            "";
-
-        resultMessage.textContent =
-            data.message ||
-            "";
-
-        return;
-    }
+    const type =
+        (
+            prize.prizeType ||
+            ""
+        ).toUpperCase();
 
 
     // ---------------------------------------------
-    // 獎項
+    // Icon
     // ---------------------------------------------
 
-    prizeName.textContent =
-        prize.name ||
-        "獎項";
-
-
-    prizeDescription.textContent =
-        prize.description ||
-        "";
-
-
-    resultMessage.textContent =
-        data.message ||
-        "恭喜您中獎！";
-
-
-    // ---------------------------------------------
-    // 不同獎項圖示
-    // ---------------------------------------------
-
-    switch (
-        String(
-            prize.prizeType || ""
-        ).toUpperCase()
-    ) {
+    switch (type) {
 
         case "SMALL":
 
@@ -680,13 +951,25 @@ function showDrawResult(data) {
 
             resultIcon.textContent =
                 "🎉";
-
-            break;
     }
 
 
+    resultTitle.textContent =
+        "恭喜中獎！";
+
+
+    resultPrize.textContent =
+        prize.name;
+
+
+    resultDescription.textContent =
+        prize.description ||
+        data.message ||
+        "恭喜您！";
+
+
     // ---------------------------------------------
-    // 是否可以再抽
+    // 再抽一次
     // ---------------------------------------------
 
     if (data.canDrawAgain) {
@@ -702,21 +985,62 @@ function showDrawResult(data) {
             "hidden"
         );
     }
+
+
+    resultOverlay.classList.remove(
+        "hidden"
+    );
 }
 
 
 // =====================================================
-// 中獎紀錄
+// 再抽一次
 // =====================================================
 
-function renderWinners(winners) {
+drawAgainButton.addEventListener(
+    "click",
+    async () => {
+
+        resultOverlay.classList.add(
+            "hidden"
+        );
+
+        await delay(250);
+
+        await drawLottery();
+    }
+);
+
+
+// =====================================================
+// 關閉結果
+// =====================================================
+
+closeResultButton.addEventListener(
+    "click",
+    () => {
+
+        resultOverlay.classList.add(
+            "hidden"
+        );
+    }
+);
+
+
+// =====================================================
+// Winner History
+// =====================================================
+
+function renderWinnerHistory(
+    winners
+) {
 
     if (!winners ||
         winners.length === 0) {
 
-        winnerList.innerHTML =
+        winnerHistory.innerHTML =
             `
-            <div class="empty-history">
+            <div class="no-winner">
                 目前還沒有中獎紀錄
             </div>
             `;
@@ -725,8 +1049,7 @@ function renderWinners(winners) {
     }
 
 
-    winnerList.innerHTML =
-        "";
+    winnerHistory.innerHTML = "";
 
 
     winners.forEach(
@@ -742,16 +1065,28 @@ function renderWinners(winners) {
                 "winner-item";
 
 
-            const icon =
-                getPrizeIcon(
-                    winner.prizeType
-                );
+            const type =
+                (
+                    winner.prizeType ||
+                    ""
+                ).toUpperCase();
 
 
-            const time =
-                formatDate(
-                    winner.wonAt
-                );
+            let icon =
+                "🎁";
+
+
+            if (type === "NORMAL") {
+                icon = "🎊";
+            }
+
+            if (type === "GRAND") {
+                icon = "🏆";
+            }
+
+            if (type === "BONUS") {
+                icon = "👑";
+            }
 
 
             item.innerHTML =
@@ -769,56 +1104,25 @@ function renderWinners(winners) {
                     </div>
 
                     <div class="winner-time">
-                        ${time}
+                        ${formatDate(
+                            winner.wonAt
+                        )}
                     </div>
 
                 </div>
                 `;
 
 
-            winnerList.appendChild(
+            winnerHistory.appendChild(
                 item
             );
-
         }
     );
 }
 
 
 // =====================================================
-// 獎項圖示
-// =====================================================
-
-function getPrizeIcon(
-    prizeType
-) {
-
-    switch (
-        String(
-            prizeType || ""
-        ).toUpperCase()
-    ) {
-
-        case "SMALL":
-            return "🎁";
-
-        case "NORMAL":
-            return "🎊";
-
-        case "GRAND":
-            return "🏆";
-
-        case "BONUS":
-            return "👑";
-
-        default:
-            return "🎉";
-    }
-}
-
-
-// =====================================================
-// 日期格式
+// Date
 // =====================================================
 
 function formatDate(
@@ -849,56 +1153,65 @@ function formatDate(
             month: "2-digit",
             day: "2-digit",
             hour: "2-digit",
-            minute: "2-digit"
+            minute: "2-digit",
+            second: "2-digit"
         }
     );
 }
 
 
 // =====================================================
-// JSON Response
+// Delay
 // =====================================================
 
-async function readJson(
-    response
+function delay(
+    milliseconds
 ) {
 
-    const text =
-        await response.text();
-
-
-    if (!text) {
-        return {};
-    }
-
-
-    try {
-
-        return JSON.parse(
-            text
-        );
-
-    }
-    catch {
-
-        return {
-            message: text
-        };
-    }
+    return new Promise(
+        resolve =>
+            setTimeout(
+                resolve,
+                milliseconds
+            )
+    );
 }
 
 
 // =====================================================
-// Error
+// Escape HTML
 // =====================================================
 
-function showError(
-    message
+function escapeHtml(
+    value
 ) {
 
-    loading.classList.add(
-        "hidden"
-    );
+    if (value === null ||
+        value === undefined) {
 
-    lotteryArea.classList.add(
-        "hidden
+        return "";
+    }
+
+
+    return String(value)
+        .replaceAll(
+            "&",
+            "&amp;"
+        )
+        .replaceAll(
+            "<",
+            "&lt;"
+        )
+        .replaceAll(
+            ">",
+            "&gt;"
+        )
+        .replaceAll(
+            '"',
+            "&quot;"
+        )
+        .replaceAll(
+            "'",
+            "&#039;"
+        );
+}
