@@ -1,121 +1,57 @@
 "use strict";
 
 const API_BASE_URL = "https://newsapi.winmen.com.tw";
-const LIFF_ID = "2011685953-o8qvyQfR";
 
-const $ = (id) => document.getElementById(id);
+const loading = document.getElementById("loading");
+const errorCard = document.getElementById("error");
+const errorMessage = document.getElementById("errorMessage");
+const retryButton = document.getElementById("retryButton");
+const mainScreen = document.getElementById("mainScreen");
 
-const loading = $("loading");
-const mainScreen = $("mainScreen");
-const errorCard = $("error");
-const errorMessage = $("errorMessage");
-const retryButton = $("retryButton");
+const eligibleCount = document.getElementById("eligibleCount");
+const availablePrizeCount = document.getElementById("availablePrizeCount");
+const statusTitle = document.getElementById("statusTitle");
+const statusMessage = document.getElementById("statusMessage");
 
-const participantName = $("participantName");
-const progressText = $("progressText");
-const progressBar = $("progressBar");
-const missionProgress = $("missionProgress");
+const drawButton = document.getElementById("drawButton");
+const drawingCard = document.getElementById("drawingCard");
+const countdown = document.getElementById("countdown");
+const resultCard = document.getElementById("resultCard");
+const winnerName = document.getElementById("winnerName");
+const prizeName = document.getElementById("prizeName");
+const prizeDescription = document.getElementById("prizeDescription");
+const resultMessage = document.getElementById("resultMessage");
+const continueButton = document.getElementById("continueButton");
 
-const statusTitle = $("statusTitle");
-const statusMessage = $("statusMessage");
+const prizeList = document.getElementById("prizeList");
+const winnerHistory = document.getElementById("winnerHistory");
 
-const drawCard = $("drawCard");
-const drawButton = $("drawButton");
-const drawingCard = $("drawingCard");
-const countdown = $("countdown");
-
-const resultCard = $("resultCard");
-const resultIcon = $("resultIcon");
-const prizeName = $("prizeName");
-const prizeDescription = $("prizeDescription");
-const resultMessage = $("resultMessage");
-const drawAgainButton = $("drawAgainButton");
-const closeResultButton = $("closeResultButton");
-
-const winnerList = $("winnerList");
-
-let lineUserId = "";
 let isDrawing = false;
-let lotteryCanDraw = false;
+let canDraw = false;
 
 document.addEventListener("DOMContentLoaded", startApp);
-
-retryButton?.addEventListener("click", () => {
-    window.location.reload();
-});
-
+retryButton?.addEventListener("click", () => window.location.reload());
 drawButton?.addEventListener("click", drawLottery);
-
-drawAgainButton?.addEventListener("click", async () => {
-    if (isDrawing || !lotteryCanDraw) return;
-
+continueButton?.addEventListener("click", () => {
     resultCard?.classList.add("hidden");
-    await delay(200);
-    await drawLottery();
-});
-
-closeResultButton?.addEventListener("click", () => {
-    resultCard?.classList.add("hidden");
-    drawCard?.classList.remove("hidden");
+    refreshStatus();
 });
 
 async function startApp() {
-    try {
-        showLoading("正在初始化 LINE...");
-
-        if (!window.liff) {
-            throw new Error("LINE LIFF SDK 載入失敗，請重新整理頁面。");
-        }
-
-        await liff.init({ liffId: LIFF_ID });
-
-        if (!liff.isLoggedIn()) {
-            showLoading("正在開啟 LINE 登入...");
-            liff.login({ redirectUri: window.location.href });
-            return;
-        }
-
-        showLoading("正在取得 LINE 使用者資料...");
-        const profile = await liff.getProfile();
-
-        if (!profile?.userId) {
-            throw new Error("無法取得 LINE 使用者資料。");
-        }
-
-        lineUserId = profile.userId;
-     
-        if (participantName) {
-            participantName.textContent = profile.displayName || "-";
-        }
-
-        mainScreen?.classList.remove("hidden");
-
-        const progress = await loadProgress();
-        await loadLotteryStatus();
-
-        // 進度未完成時，以進度結果為準停用抽獎。
-        if (!progress.allCompleted) {
-            lotteryCanDraw = false;
-            disableDraw("尚未完成六關");
-            setStatus(
-                "尚未取得抽獎資格",
-                `目前完成 ${progress.completedCount} / ${progress.totalMissions} 關，請先完成全部闖關任務。`
-            );
-        }
-    } catch (error) {
-        console.error("[LOTTERY] 初始化失敗", error);
-        showError(error?.message || "系統初始化失敗，請稍後再試。");
-    }
+    showLoading();
+    await refreshStatus();
 }
 
-function showLoading(message) {
-    if (!loading) return;
+function showLoading() {
+    loading?.classList.remove("hidden");
+    errorCard?.classList.add("hidden");
+    mainScreen?.classList.add("hidden");
+}
 
-    loading.classList.remove("hidden");
-    loading.innerHTML = `
-        <div class="loading-spinner"></div>
-        <p id="loadingText">${escapeHtml(message)}</p>
-    `;
+function showMainScreen() {
+    loading?.classList.add("hidden");
+    errorCard?.classList.add("hidden");
+    mainScreen?.classList.remove("hidden");
 }
 
 function showError(message) {
@@ -128,111 +64,84 @@ function showError(message) {
     }
 }
 
-function showMainScreen() {
-    loading?.classList.add("hidden");
-    errorCard?.classList.add("hidden");
-    mainScreen?.classList.remove("hidden");
-}
-
-async function fetchJson(url, options = {}) {
-    const response = await fetch(url, options);
+async function readJson(response) {
     const text = await response.text();
 
-    let data = {};
-    if (text) {
-        try {
-            data = JSON.parse(text);
-        } catch {
-            throw new Error(`伺服器回應格式錯誤（HTTP ${response.status}）。`);
-        }
+    if (!text) {
+        return {};
     }
 
+    try {
+        return JSON.parse(text);
+    } catch {
+        throw new Error(`伺服器回應格式錯誤（HTTP ${response.status}）`);
+    }
+}
+
+async function apiRequest(path, options = {}) {
+    let response;
+
+    try {
+        response = await fetch(`${API_BASE_URL}${path}`, {
+            ...options,
+            headers: {
+                Accept: "application/json",
+                ...(options.body ? { "Content-Type": "application/json" } : {}),
+                ...options.headers
+            }
+        });
+    } catch (error) {
+        throw new Error("無法連線抽獎伺服器，請確認網路或 API 狀態。");
+    }
+
+    const data = await readJson(response);
+
     if (!response.ok || data.success !== true) {
-        throw new Error(data.message || `請求失敗（HTTP ${response.status}）。`);
+        throw new Error(data.message || `伺服器錯誤（HTTP ${response.status}）`);
     }
 
     return data;
 }
 
-async function loadProgress() {
-    const query = new URLSearchParams({
-        lineUserId,
-        employeeNo
-    });
+async function refreshStatus() {
+    try {
+        const data = await apiRequest("/api/lottery/status");
 
-    const data = await fetchJson(
-        `${API_BASE_URL}/api/game/progress?${query.toString()}`,
-        { headers: { Accept: "application/json" } }
-    );
-
-    const missions = Array.isArray(data.missions) ? data.missions : [];
-    const totalMissions = Number(data.totalMissions) || missions.length;
-    const completedCount = Number.isFinite(Number(data.completedCount))
-        ? Number(data.completedCount)
-        : missions.filter((mission) => mission.completed === true).length;
-
-    const allCompleted =
-        data.allCompleted === true ||
-        (totalMissions > 0 && completedCount === totalMissions);
-
-    renderProgress(missions, completedCount, totalMissions);
-
-    return { allCompleted, completedCount, totalMissions };
+        showMainScreen();
+        renderStatus(data);
+        renderPrizes(data.prizes || []);
+        renderWinners(data.winners || []);
+    } catch (error) {
+        console.error("[LOTTERY STATUS]", error);
+        showError(error.message || "無法載入抽獎資料。");
+    }
 }
 
-function renderProgress(missions, completedCount, totalMissions) {
-    if (progressText) {
-        progressText.textContent = `${completedCount} / ${totalMissions}`;
+function renderStatus(data) {
+    const count = Number(data.eligibleCount) || 0;
+    const prizes = Array.isArray(data.prizes) ? data.prizes : [];
+    const available = prizes.filter((prize) => Number(prize.remaining) > 0);
+
+    if (eligibleCount) eligibleCount.textContent = String(count);
+    if (availablePrizeCount) {
+        availablePrizeCount.textContent = String(available.length);
     }
 
-    if (progressBar) {
-        const percentage = totalMissions
-            ? Math.min(100, (completedCount / totalMissions) * 100)
-            : 0;
-        progressBar.style.width = `${percentage}%`;
+    canDraw = count > 0 && available.length > 0;
+
+    if (canDraw) {
+        setStatus("抽獎準備完成", `目前有 ${count} 位合資格參加者。`);
+        drawButton.disabled = false;
+        drawButton.textContent = "🎰 開始抽獎";
+    } else if (count === 0) {
+        setStatus("目前沒有可抽獎名單", "LotteryEntries 中沒有尚可抽獎的合資格資料。");
+        drawButton.disabled = true;
+        drawButton.textContent = "目前沒有合資格名單";
+    } else {
+        setStatus("獎項已抽完", "目前沒有尚有名額的啟用獎項。");
+        drawButton.disabled = true;
+        drawButton.textContent = "獎項已抽完";
     }
-
-    if (!missionProgress) return;
-
-    missionProgress.replaceChildren();
-
-    missions.forEach((mission) => {
-        const item = document.createElement("div");
-        const completed = mission.completed === true;
-
-        item.className = `mission-item${completed ? " completed" : ""}`;
-        item.textContent = mission.name || mission.code || "關卡";
-        missionProgress.appendChild(item);
-    });
-}
-
-async function loadLotteryStatus() {
-    const query = new URLSearchParams({ lineUserId });
-
-    const data = await fetchJson(
-        `${API_BASE_URL}/api/lottery/status?${query.toString()}`,
-        { headers: { Accept: "application/json" } }
-    );
-
-    renderWinnerHistory(data.winners || []);
-
-    if (!data.hasEntry || !data.eligible) {
-        lotteryCanDraw = false;
-        setStatus("尚未取得抽獎資格", "目前查無有效抽獎資格。");
-        disableDraw("尚未取得抽獎資格");
-        return;
-    }
-
-    if (!data.canDraw) {
-        lotteryCanDraw = false;
-        setStatus("抽獎已完成", "您已完成抽獎，請查看下方中獎紀錄。");
-        disableDraw("已完成抽獎");
-        return;
-    }
-
-    lotteryCanDraw = true;
-    setStatus("可以開始抽獎", "已確認抽獎資格，祝您好運！");
-    enableDraw();
 }
 
 function setStatus(title, message) {
@@ -240,154 +149,120 @@ function setStatus(title, message) {
     if (statusMessage) statusMessage.textContent = message;
 }
 
-function enableDraw() {
-    drawCard?.classList.remove("disabled");
+function renderPrizes(prizes) {
+    if (!prizeList) return;
+    prizeList.replaceChildren();
 
-    if (drawButton) {
-        drawButton.disabled = false;
-        drawButton.textContent = "🎰 開始抽獎";
+    const available = prizes.filter((prize) => Number(prize.remaining) > 0);
+
+    if (available.length === 0) {
+        prizeList.append(makeEmptyMessage("目前沒有剩餘獎項"));
+        return;
+    }
+
+    for (const prize of available) {
+        const row = document.createElement("div");
+        row.className = "prize-item";
+
+        const name = document.createElement("div");
+        name.className = "prize-item-name";
+        name.textContent = prize.name || "獎項";
+
+        const quantity = document.createElement("div");
+        quantity.className = "prize-item-count";
+        quantity.textContent = `剩餘 ${prize.remaining} 份`;
+
+        row.append(name, quantity);
+        prizeList.appendChild(row);
     }
 }
 
-function disableDraw(label) {
-    drawCard?.classList.add("disabled");
+function renderWinners(winners) {
+    if (!winnerHistory) return;
+    winnerHistory.replaceChildren();
 
-    if (drawButton) {
-        drawButton.disabled = true;
-        drawButton.textContent = label;
+    if (!Array.isArray(winners) || winners.length === 0) {
+        winnerHistory.append(makeEmptyMessage("目前還沒有得獎紀錄"));
+        return;
     }
+
+    for (const winner of winners) {
+        const row = document.createElement("div");
+        row.className = "winner-item";
+
+        const name = document.createElement("div");
+        name.className = "winner-item-name";
+        name.textContent = `${winner.displayName || "得獎者"} — ${winner.prizeName || "獎項"}`;
+
+        const time = document.createElement("div");
+        time.className = "winner-item-time";
+        time.textContent = formatDate(winner.wonAt);
+
+        row.append(name, time);
+        winnerHistory.appendChild(row);
+    }
+}
+
+function makeEmptyMessage(message) {
+    const element = document.createElement("div");
+    element.className = "empty-message";
+    element.textContent = message;
+    return element;
 }
 
 async function drawLottery() {
-    if (isDrawing || !lotteryCanDraw) return;
+    if (isDrawing || !canDraw) return;
 
     isDrawing = true;
-    if (drawButton) drawButton.disabled = true;
+    drawButton.disabled = true;
+    drawButton.textContent = "抽獎中...";
 
     try {
-        await showDrawAnimation();
+        await showCountdown();
 
-        const data = await fetchJson(`${API_BASE_URL}/api/lottery/draw`, {
+        const data = await apiRequest("/api/lottery/draw", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Accept: "application/json"
-            },
-            body: JSON.stringify({ lineUserId, employeeNo })
+            body: "{}"
         });
 
-        showPrizeResult(data);
-        await loadLotteryStatus();
-    } catch (error) {
-        console.error("[DRAW] 抽獎失敗", error);
-        setStatus("抽獎失敗", error?.message || "抽獎過程發生錯誤。");
+        const winner = data.winner || {};
+        const prize = data.prize || {};
 
-        // 重新向後端確認資格；不直接假設仍可抽。
-        try {
-            await loadLotteryStatus();
-        } catch (statusError) {
-            console.error("[LOTTERY STATUS] 更新失敗", statusError);
-            lotteryCanDraw = false;
-            disableDraw("無法確認抽獎狀態");
+        if (winnerName) {
+            winnerName.textContent = winner.displayName || "得獎者";
         }
+        if (prizeName) {
+            prizeName.textContent = prize.name || "恭喜中獎";
+        }
+        if (prizeDescription) {
+            prizeDescription.textContent = prize.description || "";
+        }
+        if (resultMessage) {
+            resultMessage.textContent = data.message || "恭喜得獎！";
+        }
+
+        resultCard?.classList.remove("hidden");
+        await refreshStatus();
+    } catch (error) {
+        console.error("[DRAW]", error);
+        setStatus("抽獎失敗", error.message || "抽獎發生錯誤。");
+        await refreshStatus();
     } finally {
-        hideDrawAnimation();
         isDrawing = false;
+        drawingCard?.classList.add("hidden");
     }
 }
 
-async function showDrawAnimation() {
+async function showCountdown() {
     if (!drawingCard) return;
 
-    drawCard?.classList.add("hidden");
     resultCard?.classList.add("hidden");
     drawingCard.classList.remove("hidden");
 
     for (const value of ["3", "2", "1", "GO!"]) {
         if (countdown) countdown.textContent = value;
-        await delay(value === "GO!" ? 500 : 600);
+        await delay(value === "GO!" ? 400 : 600);
     }
-}
-
-function hideDrawAnimation() {
-    drawingCard?.classList.add("hidden");
-    drawCard?.classList.remove("hidden");
-}
-
-function showPrizeResult(data) {
-    const prize = data.prize;
-    if (!prize) {
-        throw new Error("抽獎成功，但伺服器沒有回傳獎項資料。");
-    }
-
-    const icons = {
-        SMALL: "🎁",
-        NORMAL: "🎊",
-        GRAND: "🏆",
-        BONUS: "👑"
-    };
-
-    if (resultIcon) {
-        resultIcon.textContent =
-            icons[String(prize.prizeType || "").toUpperCase()] || "🎉";
-    }
-
-    if (prizeName) prizeName.textContent = prize.name || "恭喜中獎";
-    if (prizeDescription) {
-        prizeDescription.textContent = prize.description || "恭喜您獲得獎項！";
-    }
-    if (resultMessage) {
-        resultMessage.textContent = data.message || "恭喜您中獎！";
-    }
-
-    drawAgainButton?.classList.toggle("hidden", data.canDrawAgain !== true);
-    resultCard?.classList.remove("hidden");
-}
-
-function renderWinnerHistory(winners) {
-    if (!winnerList) return;
-
-    winnerList.replaceChildren();
-
-    if (!Array.isArray(winners) || winners.length === 0) {
-        const empty = document.createElement("div");
-        empty.className = "empty-history";
-        empty.textContent = "目前還沒有中獎紀錄";
-        winnerList.appendChild(empty);
-        return;
-    }
-
-    winners.forEach((winner) => {
-        const type = String(winner.prizeType || "").toUpperCase();
-        const icons = {
-            SMALL: "🎁",
-            NORMAL: "🎊",
-            GRAND: "🏆",
-            BONUS: "👑"
-        };
-
-        const item = document.createElement("div");
-        item.className = "winner-item";
-
-        const icon = document.createElement("div");
-        icon.className = "winner-icon";
-        icon.textContent = icons[type] || "🎁";
-
-        const info = document.createElement("div");
-        info.className = "winner-info";
-
-        const name = document.createElement("div");
-        name.className = "winner-name";
-        name.textContent = winner.prizeName || "獎項";
-
-        const time = document.createElement("div");
-        time.className = "winner-time";
-        time.textContent = formatDate(winner.wonAt);
-
-        info.append(name, time);
-        item.append(icon, info);
-        winnerList.appendChild(item);
-    });
 }
 
 function formatDate(value) {
@@ -401,21 +276,10 @@ function formatDate(value) {
         month: "2-digit",
         day: "2-digit",
         hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit"
+        minute: "2-digit"
     });
 }
 
 function delay(milliseconds) {
     return new Promise((resolve) => setTimeout(resolve, milliseconds));
-}
-
-function escapeHtml(value) {
-    return String(value ?? "").replace(/[&<>"']/g, (character) => ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#039;"
-    })[character]);
 }
