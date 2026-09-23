@@ -8,11 +8,13 @@
 // 設定
 // =====================================================
 
-// 正式環境請改成你的 ASP.NET Core API 網址
-const API_BASE_URL = "https://newsapi.winmen.com.tw";
+// 正式環境 ASP.NET Core API
+const API_BASE_URL =
+    "https://newsapi.winmen.com.tw";
 
 // LINE LIFF ID
-const LIFF_ID = "2011685953-o8qvyQfR";
+const LIFF_ID =
+    "2011685953-o8qvyQfR";
 
 
 // =====================================================
@@ -98,6 +100,15 @@ let lineUserId = "";
 let employeeNo = "";
 
 let currentProfile = null;
+
+
+// =====================================================
+// 抽獎狀態
+//
+// 防止使用者連續快速點擊抽獎
+// =====================================================
+
+let isDrawing = false;
 
 
 // =====================================================
@@ -213,8 +224,11 @@ async function startApp() {
 
 function setLoading(message) {
 
-    loadingText.textContent =
-        message;
+    if (loadingText) {
+
+        loadingText.textContent =
+            message;
+    }
 }
 
 
@@ -351,7 +365,9 @@ async function registerOrLogin() {
 
 
     const data =
-        await response.json();
+        await readJsonResponse(
+            response
+        );
 
 
     if (!response.ok ||
@@ -390,7 +406,6 @@ async function registerOrLogin() {
     // ---------------------------------------------
 
     await loadGame();
-
 }
 
 
@@ -428,13 +443,21 @@ async function loadGame() {
         lotteryArea.innerHTML =
             `
             <div class="lottery-card">
-                <div class="lottery-icon">⚠️</div>
+
+                <div class="lottery-icon">
+                    ⚠️
+                </div>
+
                 <div class="lottery-title">
                     系統錯誤
                 </div>
+
                 <div class="lottery-description">
-                    ${escapeHtml(error.message)}
+                    ${escapeHtml(
+                        error.message
+                    )}
                 </div>
+
             </div>
             `;
     }
@@ -450,6 +473,7 @@ function setMainLoading() {
     lotteryArea.innerHTML =
         `
         <div class="lottery-card">
+
             <div class="lottery-icon">
                 🎁
             </div>
@@ -461,6 +485,7 @@ function setMainLoading() {
             <div class="lottery-description">
                 正在取得您的抽獎資料
             </div>
+
         </div>
         `;
 }
@@ -483,7 +508,9 @@ async function loadProgress() {
 
 
     const data =
-        await response.json();
+        await readJsonResponse(
+            response
+        );
 
 
     if (!response.ok ||
@@ -528,6 +555,22 @@ function renderMissions(
 ) {
 
     missionProgress.innerHTML = "";
+
+
+    if (!missions ||
+        missions.length === 0) {
+
+        missionProgress.innerHTML =
+            `
+            <div class="mission-card">
+                <div class="mission-name">
+                    目前沒有關卡資料
+                </div>
+            </div>
+            `;
+
+        return;
+    }
 
 
     missions.forEach(
@@ -597,7 +640,9 @@ async function loadLotteryStatus() {
 
 
     const data =
-        await response.json();
+        await readJsonResponse(
+            response
+        );
 
 
     if (!response.ok ||
@@ -650,6 +695,7 @@ function renderLottery(
 
                 <div class="lottery-description">
                     請先完成六個闖關任務，
+                    <br>
                     完成後即可取得抽獎資格。
                 </div>
 
@@ -731,10 +777,13 @@ function renderLottery(
         );
 
 
-    button.addEventListener(
-        "click",
-        drawLottery
-    );
+    if (button) {
+
+        button.addEventListener(
+            "click",
+            drawLottery
+        );
+    }
 }
 
 
@@ -744,10 +793,27 @@ function renderLottery(
 
 async function drawLottery() {
 
+    // ---------------------------------------------
+    // 防止連續點擊
+    // ---------------------------------------------
+
+    if (isDrawing) {
+
+        return;
+    }
+
+
+    isDrawing = true;
+
+
     showDrawAnimation();
 
 
     try {
+
+        // -----------------------------------------
+        // 呼叫後端抽獎 API
+        // -----------------------------------------
 
         const response =
             await fetch(
@@ -772,8 +838,14 @@ async function drawLottery() {
 
 
         const data =
-            await response.json();
+            await readJsonResponse(
+                response
+            );
 
+
+        // -----------------------------------------
+        // API 失敗
+        // -----------------------------------------
 
         if (!response.ok ||
             !data.success) {
@@ -788,7 +860,7 @@ async function drawLottery() {
 
 
         // -----------------------------------------
-        // 等動畫
+        // 等待動畫
         // -----------------------------------------
 
         await delay(
@@ -800,7 +872,7 @@ async function drawLottery() {
 
 
         // -----------------------------------------
-        // 顯示結果
+        // 顯示中獎結果
         // -----------------------------------------
 
         showPrizeResult(
@@ -809,7 +881,7 @@ async function drawLottery() {
 
 
         // -----------------------------------------
-        // 更新資料
+        // 更新抽獎狀態
         // -----------------------------------------
 
         await loadLotteryStatus();
@@ -820,13 +892,39 @@ async function drawLottery() {
         hideDrawAnimation();
 
 
+        console.error(
+            "抽獎失敗",
+            error
+        );
+
+
         alert(
             error.message ||
             "抽獎失敗"
         );
 
 
-        await loadLotteryStatus();
+        try {
+
+            await loadLotteryStatus();
+
+        }
+        catch (statusError) {
+
+            console.error(
+                "重新取得抽獎狀態失敗",
+                statusError
+            );
+        }
+
+    }
+    finally {
+
+        // -----------------------------------------
+        // 解鎖抽獎
+        // -----------------------------------------
+
+        isDrawing = false;
     }
 }
 
@@ -902,6 +1000,16 @@ function showPrizeResult(
         data.prize;
 
 
+    if (!prize) {
+
+        alert(
+            "抽獎成功，但沒有取得獎項資料。"
+        );
+
+        return;
+    }
+
+
     const type =
         (
             prize.prizeType ||
@@ -951,16 +1059,31 @@ function showPrizeResult(
 
             resultIcon.textContent =
                 "🎉";
+
+            break;
     }
 
+
+    // ---------------------------------------------
+    // 標題
+    // ---------------------------------------------
 
     resultTitle.textContent =
         "恭喜中獎！";
 
 
-    resultPrize.textContent =
-        prize.name;
+    // ---------------------------------------------
+    // 獎項名稱
+    // ---------------------------------------------
 
+    resultPrize.textContent =
+        prize.name ||
+        "恭喜中獎";
+
+
+    // ---------------------------------------------
+    // 獎項說明
+    // ---------------------------------------------
 
     resultDescription.textContent =
         prize.description ||
@@ -987,6 +1110,10 @@ function showPrizeResult(
     }
 
 
+    // ---------------------------------------------
+    // 顯示結果
+    // ---------------------------------------------
+
     resultOverlay.classList.remove(
         "hidden"
     );
@@ -1001,11 +1128,25 @@ drawAgainButton.addEventListener(
     "click",
     async () => {
 
+        // ---------------------------------------------
+        // 防止重複點擊
+        // ---------------------------------------------
+
+        if (isDrawing) {
+
+            return;
+        }
+
+
         resultOverlay.classList.add(
             "hidden"
         );
 
-        await delay(250);
+
+        await delay(
+            250
+        );
+
 
         await drawLottery();
     }
@@ -1077,15 +1218,23 @@ function renderWinnerHistory(
 
 
             if (type === "NORMAL") {
-                icon = "🎊";
+
+                icon =
+                    "🎊";
             }
+
 
             if (type === "GRAND") {
-                icon = "🏆";
+
+                icon =
+                    "🏆";
             }
 
+
             if (type === "BONUS") {
-                icon = "👑";
+
+                icon =
+                    "👑";
             }
 
 
@@ -1130,6 +1279,7 @@ function formatDate(
 ) {
 
     if (!value) {
+
         return "";
     }
 
@@ -1150,10 +1300,15 @@ function formatDate(
         "zh-TW",
         {
             year: "numeric",
+
             month: "2-digit",
+
             day: "2-digit",
+
             hour: "2-digit",
+
             minute: "2-digit",
+
             second: "2-digit"
         }
     );
@@ -1186,32 +1341,82 @@ function escapeHtml(
     value
 ) {
 
-    if (value === null ||
-        value === undefined) {
+    if (
+        value === null ||
+        value === undefined
+    ) {
 
         return "";
     }
 
 
     return String(value)
+
         .replaceAll(
             "&",
             "&amp;"
         )
+
         .replaceAll(
             "<",
             "&lt;"
         )
+
         .replaceAll(
             ">",
             "&gt;"
         )
+
         .replaceAll(
             '"',
             "&quot;"
         )
+
         .replaceAll(
             "'",
             "&#039;"
         );
+}
+
+
+// =====================================================
+// JSON Response
+//
+// 避免 API 發生非 JSON 錯誤時
+// 前端直接出現 JSON parse error
+// =====================================================
+
+async function readJsonResponse(
+    response
+) {
+
+    const text =
+        await response.text();
+
+
+    if (!text) {
+
+        return {};
+    }
+
+
+    try {
+
+        return JSON.parse(
+            text
+        );
+
+    }
+    catch (error) {
+
+        console.error(
+            "API 回傳不是有效 JSON",
+            text
+        );
+
+
+        throw new Error(
+            `伺服器回應格式錯誤 (${response.status})`
+        );
+    }
 }
