@@ -1,0 +1,744 @@
+* {
+    box-sizing: border-box;
+}
+
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+
+    min-height: 100%;
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        "Noto Sans TC",
+        sans-serif;
+
+    background:
+        linear-gradient(
+            135deg,
+            #fff5d6,
+            #ffe8a3,
+            #fff9ec
+        );
+
+    color: #3a2a16;
+}
+
+
+body {
+    min-height: 100vh;
+}
+
+
+.hidden {
+    display: none !important;
+}
+
+
+/* ========================================= */
+/* Page */
+/* ========================================= */
+
+.lottery-page {
+
+    width: 100%;
+
+    max-width: 600px;
+
+    margin: 0 auto;
+
+    padding:
+        24px
+        18px
+        50px;
+}
+
+
+/* ========================================= */
+/* Header */
+/* ========================================= */
+
+.header {
+
+    text-align: center;
+
+    margin-bottom: 24px;
+}
+
+
+.event-title {
+
+    font-size: 15px;
+
+    color: #9b6a13;
+
+    font-weight: 700;
+
+    letter-spacing: 4px;
+
+    margin-bottom: 8px;
+}
+
+
+.header h1 {
+
+    margin: 0;
+
+    font-size: 34px;
+
+    color: #7a3e00;
+
+    text-shadow:
+        0 3px 0 #fff;
+}
+
+
+.header p {
+
+    margin-top: 10px;
+
+    color: #795f38;
+
+    font-size: 15px;
+}
+
+
+/* ========================================= */
+/* Card */
+/* ========================================= */
+
+.card {
+
+    background: rgba(255, 255, 255, 0.94);
+
+    border-radius: 22px;
+
+    padding: 22px;
+
+    margin-bottom: 18px;
+
+    box-shadow:
+        0 8px 30px
+        rgba(120, 75, 0, 0.12);
+}
+
+
+/* ========================================= */
+/* Loading */
+/* ========================================= */
+
+#loading {
+
+    text-align: center;
+
+    padding: 45px 20px;
+}
+
+
+.loading-spinner {
+
+    width: 44px;
+
+    height: 44px;
+
+    margin: 0 auto 18px;
+
+    border-radius: 50%;
+
+    border:
+        4px solid #f5ddb0;
+
+    border-top-color:
+        #e99a16;
+
+    animation:
+        spin 0.8s linear infinite;
+}
+
+
+@keyframes spin {
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* ========================================= */
+/* Error */
+/* ========================================= */
+
+.error-card {
+
+    text-align: center;
+
+    border:
+        2px solid #f0b4a9;
+}
+
+
+.error-icon {
+
+    font-size: 42px;
+}
+
+
+.error-card h2 {
+
+    color: #a03927;
+}
+
+
+.error-card p {
+
+    color: #75544c;
+
+    line-height: 1.7;
+}
+
+
+/* ========================================= */
+/* Participant */
+/* ========================================= */
+
+.participant-card {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 16px;
+}
+
+
+.participant-icon {
+
+    width: 55px;
+
+    height: 55px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+        #fff1c7;
+
+    font-size: 28px;
+}
+
+
+.participant-label {
+
+    color: #977044;
+
+    font-size: 13px;
+}
+
+
+.participant-name {
+
+    font-size: 20px;
+
+    font-weight: 800;
+
+    color: #593300;
+}
+
+
+.employee-no {
+
+    margin-top: 3px;
+
+    font-size: 13px;
+
+    color: #9b805c;
+}
+
+
+/* ========================================= */
+/* Status */
+/* ========================================= */
+
+.status-card {
+
+    text-align: center;
+}
+
+
+.status-icon {
+
+    font-size: 45px;
+
+    margin-bottom: 8px;
+}
+
+
+.status-card h2 {
+
+    margin: 5px 0;
+
+    color: #744000;
+}
+
+
+.status-card p {
+
+    margin: 8px 0 0;
+
+    color: #7c684d;
+
+    line-height: 1.7;
+}
+
+
+/* ========================================= */
+/* Draw Card */
+/* ========================================= */
+
+.draw-card {
+
+    text-align: center;
+
+    background:
+        linear-gradient(
+            145deg,
+            #fff,
+            #fff5d5
+        );
+
+    border-radius: 26px;
+
+    padding: 32px 22px;
+
+    margin-bottom: 20px;
+
+    box-shadow:
+        0 12px 35px
+        rgba(132, 77, 0, 0.16);
+}
+
+
+.gift-animation {
+
+    margin-bottom: 10px;
+}
+
+
+.gift {
+
+    font-size: 75px;
+
+    animation:
+        giftFloat 2s ease-in-out infinite;
+}
+
+
+@keyframes giftFloat {
+
+    0%,
+    100% {
+        transform:
+            translateY(0)
+            rotate(-3deg);
+    }
+
+    50% {
+        transform:
+            translateY(-10px)
+            rotate(3deg);
+    }
+}
+
+
+.draw-card h2 {
+
+    margin: 10px 0 6px;
+
+    color: #693500;
+}
+
+
+.draw-card p {
+
+    margin:
+        0
+        0
+        24px;
+
+    color: #8a6a43;
+}
+
+
+/* ========================================= */
+/* Buttons */
+/* ========================================= */
+
+.draw-button {
+
+    border: 0;
+
+    width: 100%;
+
+    min-height: 58px;
+
+    padding: 14px 20px;
+
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ffb52e,
+            #f07c00
+        );
+
+    color: white;
+
+    font-size: 19px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 8px 20px
+        rgba(220, 113, 0, 0.30);
+
+    transition:
+        transform 0.15s,
+        box-shadow 0.15s;
+}
+
+
+.draw-button:active {
+
+    transform: scale(0.97);
+
+    box-shadow:
+        0 4px 10px
+        rgba(220, 113, 0, 0.25);
+}
+
+
+.draw-button:disabled {
+
+    opacity: 0.6;
+
+    cursor: not-allowed;
+}
+
+
+.secondary-button {
+
+    border: 0;
+
+    padding: 12px 20px;
+
+    border-radius: 12px;
+
+    background: #ead9b5;
+
+    color: #5d461f;
+
+    font-weight: 700;
+}
+
+
+/* ========================================= */
+/* Drawing */
+/* ========================================= */
+
+.drawing-card {
+
+    text-align: center;
+
+    background:
+        linear-gradient(
+            135deg,
+            #8f1d1d,
+            #c92828,
+            #8c1515
+        );
+
+    color: white;
+
+    border-radius: 26px;
+
+    padding: 45px 20px;
+
+    margin-bottom: 20px;
+
+    box-shadow:
+        0 12px 35px
+        rgba(130, 20, 20, 0.30);
+}
+
+
+.drawing-stars {
+
+    font-size: 24px;
+
+    animation:
+        sparkle 0.7s infinite alternate;
+}
+
+
+@keyframes sparkle {
+
+    from {
+        transform: scale(0.95);
+        opacity: 0.7;
+    }
+
+    to {
+        transform: scale(1.08);
+        opacity: 1;
+    }
+}
+
+
+.countdown {
+
+    font-size: 82px;
+
+    font-weight: 900;
+
+    margin: 20px 0;
+
+    text-shadow:
+        0 5px 0
+        rgba(0, 0, 0, 0.15);
+}
+
+
+.drawing-card h2 {
+
+    margin: 0;
+
+    font-size: 25px;
+}
+
+
+.drawing-card p {
+
+    opacity: 0.85;
+}
+
+
+/* ========================================= */
+/* Result */
+/* ========================================= */
+
+.result-card {
+
+    text-align: center;
+
+    background:
+        linear-gradient(
+            145deg,
+            #fff,
+            #fff1bf
+        );
+
+    border:
+        3px solid #f2b233;
+
+    border-radius: 28px;
+
+    padding: 32px 22px;
+
+    margin-bottom: 20px;
+
+    box-shadow:
+        0 15px 45px
+        rgba(170, 93, 0, 0.22);
+}
+
+
+.result-icon {
+
+    font-size: 65px;
+
+    animation:
+        resultPop 0.5s ease-out;
+}
+
+
+@keyframes resultPop {
+
+    from {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+
+.result-title {
+
+    font-size: 21px;
+
+    font-weight: 800;
+
+    color: #9b5a00;
+
+    margin-top: 8px;
+}
+
+
+.prize-name {
+
+    font-size: 42px;
+
+    font-weight: 900;
+
+    color: #c52717;
+
+    margin:
+        10px
+        0;
+}
+
+
+.prize-description {
+
+    color: #725b3a;
+
+    line-height: 1.7;
+
+    margin-bottom: 15px;
+}
+
+
+.result-message {
+
+    font-weight: 800;
+
+    color: #8b3f00;
+
+    margin-bottom: 20px;
+}
+
+
+/* ========================================= */
+/* History */
+/* ========================================= */
+
+.history-title {
+
+    font-size: 20px;
+
+    font-weight: 900;
+
+    color: #653900;
+
+    margin-bottom: 15px;
+}
+
+
+.winner-list {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+
+.winner-item {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 13px;
+
+    background: #fff7e2;
+
+    border-radius: 14px;
+}
+
+
+.winner-icon {
+
+    font-size: 25px;
+}
+
+
+.winner-info {
+
+    flex: 1;
+}
+
+
+.winner-name {
+
+    font-weight: 800;
+
+    color: #713900;
+}
+
+
+.winner-time {
+
+    font-size: 12px;
+
+    color: #9c825d;
+
+    margin-top: 3px;
+}
+
+
+.empty-history {
+
+    text-align: center;
+
+    padding: 20px;
+
+    color: #9b8768;
+}
+
+
+/* ========================================= */
+/* Mobile */
+/* ========================================= */
+
+@media (max-width: 480px) {
+
+    .lottery-page {
+
+        padding:
+            20px
+            14px
+            40px;
+    }
+
+
+    .header h1 {
+
+        font-size: 30px;
+    }
+
+
+    .prize-name {
+
+        font-size: 36px;
+    }
+
+}
