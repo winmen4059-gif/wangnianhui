@@ -9,7 +9,7 @@
 // =====================================================
 
 // 正式環境請改成你的 ASP.NET Core API 網址
-const API_BASE_URL = "https://localhost:7086";
+const API_BASE_URL = "https://newsapi.winmen.com.tw";
 
 // LINE LIFF ID
 const LIFF_ID = "2011685953-o8qvyQfR";
