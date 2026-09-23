@@ -35,7 +35,6 @@ const closeResultButton = $("closeResultButton");
 const winnerList = $("winnerList");
 
 let lineUserId = "";
-let employeeNo = "";
 let isDrawing = false;
 let lotteryCanDraw = false;
 
@@ -84,16 +83,7 @@ async function startApp() {
         }
 
         lineUserId = profile.userId;
-        employeeNo = (
-            localStorage.getItem("wangnianhui_employee_no") || ""
-        ).trim();
-
-        if (!employeeNo) {
-            throw new Error(
-                "找不到員工工號。請先完成工號登記，再從 LINE 重新開啟抽獎頁面。"
-            );
-        }
-
+     
         if (participantName) {
             participantName.textContent = profile.displayName || "-";
         }
@@ -217,10 +207,7 @@ function renderProgress(missions, completedCount, totalMissions) {
 }
 
 async function loadLotteryStatus() {
-    const query = new URLSearchParams({
-        lineUserId,
-        employeeNo
-    });
+    const query = new URLSearchParams({ lineUserId });
 
     const data = await fetchJson(
         `${API_BASE_URL}/api/lottery/status?${query.toString()}`,
@@ -231,7 +218,7 @@ async function loadLotteryStatus() {
 
     if (!data.hasEntry || !data.eligible) {
         lotteryCanDraw = false;
-        setStatus("尚未取得抽獎資格", "請先完成全部六個闖關任務。");
+        setStatus("尚未取得抽獎資格", "目前查無有效抽獎資格。");
         disableDraw("尚未取得抽獎資格");
         return;
     }
@@ -244,7 +231,7 @@ async function loadLotteryStatus() {
     }
 
     lotteryCanDraw = true;
-    setStatus("可以開始抽獎", "恭喜您取得抽獎資格，祝您好運！");
+    setStatus("可以開始抽獎", "已確認抽獎資格，祝您好運！");
     enableDraw();
 }
 
