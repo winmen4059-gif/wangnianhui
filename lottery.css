@@ -4,29 +4,20 @@
 
 html,
 body {
-    margin: 0;
-    padding: 0;
     min-height: 100%;
+    margin: 0;
     font-family:
         -apple-system,
         BlinkMacSystemFont,
         "Segoe UI",
         "Noto Sans TC",
         sans-serif;
-    background: linear-gradient(135deg, #fff5d6, #ffe8a3, #fff9ec);
     color: #3a2a16;
-}
-
-body {
-    min-height: 100vh;
-}
-
-button,
-input {
-    font: inherit;
+    background: linear-gradient(135deg, #fff5d6, #ffe8a3, #fff9ec);
 }
 
 button {
+    font: inherit;
     -webkit-tap-highlight-color: transparent;
 }
 
@@ -34,35 +25,22 @@ button {
     display: none !important;
 }
 
-.visually-hidden {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
-}
-
 .lottery-page {
-    width: 100%;
-    max-width: 600px;
+    width: min(100%, 680px);
     margin: 0 auto;
-    padding: 24px 18px 50px;
+    padding: 24px 18px 48px;
 }
 
 .header {
-    text-align: center;
     margin-bottom: 24px;
+    text-align: center;
 }
 
 .event-title {
     margin-bottom: 8px;
     color: #9b6a13;
     font-size: 15px;
-    font-weight: 700;
+    font-weight: 800;
     letter-spacing: 4px;
 }
 
@@ -70,13 +48,12 @@ button {
     margin: 0;
     color: #7a3e00;
     font-size: 34px;
-    text-shadow: 0 3px 0 #fff;
+    text-shadow: 0 3px #fff;
 }
 
 .header p {
     margin: 10px 0 0;
     color: #795f38;
-    font-size: 15px;
     line-height: 1.6;
 }
 
@@ -84,25 +61,26 @@ button {
     margin-bottom: 18px;
     padding: 22px;
     border-radius: 22px;
-    background: rgba(255, 255, 255, 0.94);
+    background: rgba(255, 255, 255, 0.95);
     box-shadow: 0 8px 30px rgba(120, 75, 0, 0.12);
 }
 
-.loading-card {
-    padding: 45px 20px;
+.message-card,
+.error-card,
+.status-card,
+.result-card {
     text-align: center;
 }
 
-#loadingText {
-    margin: 0;
+.message-card p {
+    margin-bottom: 0;
     color: #795f38;
-    line-height: 1.7;
 }
 
 .loading-spinner {
-    width: 44px;
-    height: 44px;
-    margin: 0 auto 18px;
+    width: 42px;
+    height: 42px;
+    margin: 0 auto 14px;
     border: 4px solid #f5ddb0;
     border-top-color: #e99a16;
     border-radius: 50%;
@@ -117,178 +95,58 @@ button {
 
 .error-card {
     border: 2px solid #f0b4a9;
-    text-align: center;
 }
 
 .error-icon {
-    margin-bottom: 5px;
     font-size: 42px;
 }
 
 .error-card h2 {
-    margin: 8px 0;
     color: #a03927;
 }
 
 .error-card p {
-    margin-bottom: 20px;
     color: #75544c;
     line-height: 1.7;
 }
 
-.status-icon {
-    margin-bottom: 8px;
-    font-size: 45px;
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
 }
 
-#loginScreen,
-.status-card {
+.summary-card {
+    margin-bottom: 18px;
     text-align: center;
 }
 
-#loginScreen h2,
-.status-card h2 {
-    margin: 5px 0;
-    color: #744000;
-    font-size: 22px;
+.summary-label {
+    color: #977044;
+    font-size: 14px;
+    font-weight: 700;
 }
 
-#loginScreen p,
+.summary-value {
+    margin-top: 5px;
+    color: #a65d00;
+    font-size: 34px;
+    font-weight: 900;
+}
+
+.status-icon {
+    font-size: 42px;
+}
+
+.status-card h2 {
+    margin: 7px 0;
+    color: #744000;
+}
+
 .status-card p {
-    margin: 8px 0 0;
+    margin: 0;
     color: #7c684d;
     line-height: 1.7;
-}
-
-.employee-input {
-    width: 100%;
-    min-height: 52px;
-    margin: 18px 0 12px;
-    padding: 12px 15px;
-    border: 2px solid #ead9b5;
-    border-radius: 13px;
-    background: #fffdf7;
-    color: #3a2a16;
-    font-size: 17px;
-}
-
-.employee-input:focus {
-    border-color: #e99a16;
-    outline: 3px solid rgba(233, 154, 22, 0.18);
-}
-
-.login-message {
-    min-height: 1.5em;
-    margin-top: 12px;
-    color: #a03927;
-    line-height: 1.5;
-}
-
-.participant-card {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
-
-.participant-icon {
-    display: flex;
-    flex: 0 0 55px;
-    align-items: center;
-    justify-content: center;
-    width: 55px;
-    height: 55px;
-    border-radius: 50%;
-    background: #fff1c7;
-    font-size: 28px;
-}
-
-.participant-details {
-    min-width: 0;
-}
-
-.participant-label {
-    margin-bottom: 2px;
-    color: #977044;
-    font-size: 13px;
-}
-
-.participant-name {
-    color: #593300;
-    font-size: 20px;
-    font-weight: 800;
-    overflow-wrap: anywhere;
-}
-
-.progress-card {
-    padding: 20px 22px;
-}
-
-.progress-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    margin-bottom: 12px;
-}
-
-.progress-title {
-    color: #704000;
-    font-size: 16px;
-    font-weight: 800;
-}
-
-.progress-text {
-    color: #a06c18;
-    font-size: 14px;
-    font-weight: 800;
-    white-space: nowrap;
-}
-
-.progress-bar {
-    width: 100%;
-    height: 12px;
-    overflow: hidden;
-    border-radius: 999px;
-    background: #f3e3bd;
-}
-
-.progress-fill {
-    height: 100%;
-    border-radius: inherit;
-    background: linear-gradient(90deg, #ffb52e, #f07c00);
-    transition: width 0.4s ease;
-}
-
-.mission-progress {
-    display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-    gap: 6px;
-    margin-top: 14px;
-}
-
-.mission-item {
-    padding: 7px 3px;
-    border-radius: 9px;
-    background: #fff7e2;
-    color: #9b805c;
-    font-size: 11px;
-    font-weight: 700;
-    text-align: center;
-    overflow-wrap: anywhere;
-}
-
-.mission-item.completed {
-    background: #fff0c4;
-    color: #a65d00;
-}
-
-.mission-item.completed::before {
-    color: #df8500;
-    content: "✓ ";
-}
-
-#lotteryArea {
-    width: 100%;
 }
 
 .draw-card {
@@ -298,42 +156,26 @@ button {
     background: linear-gradient(145deg, #fff, #fff5d5);
     box-shadow: 0 12px 35px rgba(132, 77, 0, 0.16);
     text-align: center;
-    transition: opacity 0.2s, transform 0.2s;
-}
-
-.draw-card.disabled {
-    opacity: 0.72;
-}
-
-.gift-animation {
-    margin-bottom: 10px;
 }
 
 .gift {
-    font-size: 75px;
-    line-height: 1;
-    animation: giftFloat 2s ease-in-out infinite;
+    font-size: 72px;
+    animation: float 2s ease-in-out infinite;
 }
 
-@keyframes giftFloat {
-    0%,
-    100% {
-        transform: translateY(0) rotate(-3deg);
-    }
-
+@keyframes float {
     50% {
-        transform: translateY(-10px) rotate(3deg);
+        transform: translateY(-9px) rotate(4deg);
     }
 }
 
 .draw-card h2 {
-    margin: 10px 0 6px;
     color: #693500;
-    font-size: 24px;
+    font-size: 23px;
 }
 
 .draw-card p {
-    margin: 0 0 24px;
+    margin-bottom: 22px;
     color: #8a6a43;
     line-height: 1.7;
 }
@@ -343,237 +185,168 @@ button {
     min-height: 58px;
     padding: 14px 20px;
     border: 0;
-    border-radius: 18px;
+    border-radius: 17px;
     background: linear-gradient(135deg, #ffb52e, #f07c00);
     box-shadow: 0 8px 20px rgba(220, 113, 0, 0.3);
     color: #fff;
     font-size: 19px;
     font-weight: 800;
     cursor: pointer;
-    transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
 }
 
 .draw-button:hover:not(:disabled) {
+    filter: brightness(1.04);
     transform: translateY(-1px);
-    box-shadow: 0 10px 24px rgba(220, 113, 0, 0.34);
-}
-
-.draw-button:active:not(:disabled) {
-    transform: scale(0.97);
-    box-shadow: 0 4px 10px rgba(220, 113, 0, 0.25);
 }
 
 .draw-button:disabled {
     box-shadow: none;
-    opacity: 0.6;
+    opacity: 0.55;
     cursor: not-allowed;
 }
 
+.drawing-card {
+    margin-bottom: 20px;
+    padding: 38px 20px;
+    border-radius: 26px;
+    background: linear-gradient(135deg, #8f1d1d, #c92828, #8c1515);
+    box-shadow: 0 12px 35px rgba(130, 20, 20, 0.3);
+    color: white;
+    text-align: center;
+}
+
+.sparkles {
+    font-size: 24px;
+}
+
+.countdown {
+    margin: 18px 0;
+    font-size: 76px;
+    font-weight: 900;
+}
+
+.drawing-card h2 {
+    margin: 0;
+}
+
+.drawing-card p {
+    margin-bottom: 0;
+}
+
+.result-card {
+    margin-bottom: 20px;
+    padding: 30px 22px;
+    border: 3px solid #f2b233;
+    border-radius: 26px;
+    background: linear-gradient(145deg, #fff, #fff1bf);
+    box-shadow: 0 15px 45px rgba(170, 93, 0, 0.22);
+}
+
+.result-icon {
+    font-size: 58px;
+}
+
+.result-title {
+    margin-top: 8px;
+    color: #9b5a00;
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.winner-name {
+    margin: 12px 0 4px;
+    color: #713900;
+    font-size: 25px;
+    font-weight: 800;
+    overflow-wrap: anywhere;
+}
+
+.prize-name {
+    margin: 6px 0 12px;
+    color: #c52717;
+    font-size: 38px;
+    font-weight: 900;
+    overflow-wrap: anywhere;
+}
+
+.prize-description {
+    color: #725b3a;
+    line-height: 1.7;
+}
+
+.result-message {
+    margin: 14px 0 20px;
+    color: #8b3f00;
+    font-weight: 800;
+}
+
 .secondary-button {
-    padding: 12px 20px;
+    min-height: 44px;
+    padding: 10px 18px;
     border: 0;
     border-radius: 12px;
     background: #ead9b5;
     color: #5d461f;
     font-weight: 700;
     cursor: pointer;
-    transition: background 0.15s, transform 0.15s;
 }
 
 .secondary-button:hover {
     background: #dfc99b;
 }
 
-.secondary-button:active {
-    transform: scale(0.97);
-}
-
-.drawing-card {
-    margin-bottom: 20px;
-    padding: 45px 20px;
-    border-radius: 26px;
-    background: linear-gradient(135deg, #8f1d1d, #c92828, #8c1515);
-    box-shadow: 0 12px 35px rgba(130, 20, 20, 0.3);
-    color: #fff;
-    text-align: center;
-}
-
-.drawing-stars {
-    font-size: 24px;
-    animation: sparkle 0.7s infinite alternate;
-}
-
-@keyframes sparkle {
-    from {
-        transform: scale(0.95);
-        opacity: 0.7;
-    }
-
-    to {
-        transform: scale(1.08);
-        opacity: 1;
-    }
-}
-
-.countdown {
-    margin: 20px 0;
-    font-size: 82px;
-    font-weight: 900;
-    line-height: 1;
-    text-shadow: 0 5px 0 rgba(0, 0, 0, 0.15);
-}
-
-.drawing-card h2 {
-    margin: 0;
-    font-size: 25px;
-}
-
-.drawing-card p {
-    margin-bottom: 0;
-    opacity: 0.85;
-}
-
-.result-card {
-    margin-bottom: 20px;
-    padding: 32px 22px;
-    border: 3px solid #f2b233;
-    border-radius: 28px;
-    background: linear-gradient(145deg, #fff, #fff1bf);
-    box-shadow: 0 15px 45px rgba(170, 93, 0, 0.22);
-    text-align: center;
-}
-
-.result-icon {
-    font-size: 65px;
-    line-height: 1;
-    animation: resultPop 0.5s ease-out;
-}
-
-@keyframes resultPop {
-    from {
-        transform: scale(0);
-        opacity: 0;
-    }
-
-    to {
-        transform: scale(1);
-        opacity: 1;
-    }
-}
-
-.result-title {
-    margin-top: 12px;
-    color: #9b5a00;
-    font-size: 21px;
-    font-weight: 800;
-}
-
-.prize-name {
-    margin: 10px 0;
-    color: #c52717;
-    font-size: 42px;
-    font-weight: 900;
-    line-height: 1.25;
-    overflow-wrap: anywhere;
-}
-
-.prize-description {
-    margin-bottom: 15px;
-    color: #725b3a;
-    line-height: 1.7;
-}
-
-.result-message {
-    margin-bottom: 20px;
-    color: #8b3f00;
-    font-weight: 800;
-    line-height: 1.6;
-}
-
-#resultCard .draw-button {
-    margin-bottom: 10px;
-}
-
-.history-card {
-    margin-bottom: 0;
-}
-
-.history-title {
-    margin-bottom: 15px;
+.prize-card h2,
+.history-card h2 {
+    margin: 0 0 15px;
     color: #653900;
     font-size: 20px;
-    font-weight: 900;
 }
 
+.prize-list,
 .winner-list {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 9px;
 }
 
+.prize-item,
 .winner-item {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 12px;
-    padding: 13px;
-    border-radius: 14px;
+    padding: 12px 14px;
+    border-radius: 13px;
     background: #fff7e2;
 }
 
-.winner-icon {
-    flex: 0 0 34px;
-    width: 34px;
-    font-size: 25px;
-    text-align: center;
-}
-
-.winner-info {
-    flex: 1;
-    min-width: 0;
-}
-
-.winner-name {
+.prize-item-name,
+.winner-item-name {
     color: #713900;
     font-weight: 800;
     overflow-wrap: anywhere;
 }
 
-.winner-time {
-    margin-top: 3px;
+.prize-item-count,
+.winner-item-time {
+    flex: 0 0 auto;
     color: #9c825d;
-    font-size: 12px;
+    font-size: 13px;
 }
 
-.empty-history {
-    padding: 20px;
+.empty-message {
+    padding: 16px;
     color: #9b8768;
     text-align: center;
 }
 
-#mainScreen {
-    width: 100%;
-}
-
-#mainScreen > .participant-card,
-#mainScreen > .progress-card {
-    margin-bottom: 18px;
-}
-
 @media (max-width: 480px) {
     .lottery-page {
-        padding: 20px 14px 40px;
-    }
-
-    .header {
-        margin-bottom: 20px;
+        padding: 20px 14px 36px;
     }
 
     .header h1 {
         font-size: 30px;
-    }
-
-    .header p {
-        font-size: 14px;
     }
 
     .card {
@@ -581,40 +354,8 @@ button {
         border-radius: 19px;
     }
 
-    .participant-card {
-        gap: 12px;
-    }
-
-    .participant-icon {
-        flex-basis: 50px;
-        width: 50px;
-        height: 50px;
-        font-size: 25px;
-    }
-
-    .participant-name {
-        font-size: 18px;
-    }
-
-    .mission-progress {
-        gap: 4px;
-    }
-
-    .mission-item {
-        padding: 6px 2px;
-        font-size: 10px;
-    }
-
     .draw-card {
-        padding: 28px 18px;
-    }
-
-    .gift {
-        font-size: 65px;
-    }
-
-    .draw-card h2 {
-        font-size: 22px;
+        padding: 27px 18px;
     }
 
     .draw-button {
@@ -622,60 +363,7 @@ button {
         font-size: 18px;
     }
 
-    .drawing-card {
-        padding: 40px 18px;
-    }
-
-    .countdown {
-        font-size: 70px;
-    }
-
-    .drawing-card h2 {
-        font-size: 22px;
-    }
-
-    .result-card {
-        padding: 28px 18px;
-    }
-
-    .result-icon {
-        font-size: 58px;
-    }
-
     .prize-name {
-        font-size: 36px;
-    }
-
-    .prize-description {
-        font-size: 14px;
-    }
-}
-
-@media (max-width: 360px) {
-    .lottery-page {
-        padding-right: 10px;
-        padding-left: 10px;
-    }
-
-    .header h1 {
-        font-size: 27px;
-    }
-
-    .progress-header {
-        align-items: flex-start;
-        flex-direction: column;
-        gap: 4px;
-    }
-
-    .mission-progress {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    .countdown {
-        font-size: 62px;
-    }
-
-    .prize-name {
-        font-size: 32px;
+        font-size: 33px;
     }
 }
