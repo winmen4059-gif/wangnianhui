@@ -10,7 +10,7 @@
 // !!! 請改成你的 ASP.NET Core API 網址 !!!
 
 const API_BASE_URL =
-    "https://你的API網址";
+    "https://newsapi.winmen.com.tw";
 
 
 // =====================================================
