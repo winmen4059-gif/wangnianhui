@@ -1,473 +1,431 @@
-<!DOCTYPE html>
-<html lang="zh-TW">
-
-<head>
-
-    <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>旺年會闖關</title>
-
-    <!-- LINE LIFF -->
-    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-
-    <style>
-
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-
-            margin: 0;
-
-            font-family:
-                -apple-system,
-                BlinkMacSystemFont,
-                "Noto Sans TC",
-                Arial,
-                sans-serif;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #fff4d6,
-                    #ffe4ec
-                );
-
-            min-height: 100vh;
-
-            display: flex;
-
-            justify-content: center;
-
-            align-items: center;
-
-            color: #333;
-
-            padding: 20px;
-        }
-
-
-        .container {
-
-            width: 100%;
-
-            max-width: 430px;
-
-            background: white;
-
-            border-radius: 24px;
-
-            padding: 30px 22px;
-
-            text-align: center;
-
-            box-shadow:
-                0 10px 30px
-                rgba(0,0,0,0.12);
-        }
-
-
-        .logo {
-
-            font-size: 60px;
-
-            margin-bottom: 8px;
-        }
-
-
-        h1 {
-
-            color: #d9485f;
-
-            margin: 10px 0;
-
-            font-size: 27px;
-        }
-
-
-        h2 {
-
-            font-size: 20px;
-
-            line-height: 1.5;
-        }
-
-
-        .subtitle {
-
-            color: #777;
-
-            margin-bottom: 20px;
-
-            line-height: 1.6;
-        }
-
-
-        .user {
-
-            background: #f7f7f7;
-
-            padding: 12px;
-
-            border-radius: 12px;
-
-            margin-bottom: 20px;
-
-            line-height: 1.6;
-        }
-
-
-        input {
-
-            width: 100%;
-
-            padding: 15px;
-
-            border: 1px solid #ddd;
-
-            border-radius: 10px;
-
-            font-size: 16px;
-
-            margin-bottom: 15px;
-
-            outline: none;
-        }
-
-
-        input:focus {
-
-            border-color: #06c755;
-
-            box-shadow:
-                0 0 0 3px
-                rgba(6,199,85,0.12);
-        }
-
-
-        button {
-
-            width: 100%;
-
-            padding: 15px;
-
-            border: none;
-
-            border-radius: 12px;
-
-            background: #06c755;
-
-            color: white;
-
-            font-size: 17px;
-
-            font-weight: bold;
-
-            cursor: pointer;
-
-            margin-bottom: 10px;
-        }
-
-
-        button:active {
-
-            transform: scale(0.97);
-        }
-
-
-        button:disabled {
-
-            background: #aaa;
-
-            cursor: not-allowed;
-        }
-
-
-        .secondary {
-
-            background: #777;
-        }
-
-
-        .mission-list {
-
-            text-align: left;
-
-            margin: 20px 0;
-        }
-
-
-        .mission-row {
-
-            padding: 14px;
-
-            margin-bottom: 9px;
-
-            border-radius: 12px;
-
-            background: #f7f7f7;
-
-            line-height: 1.5;
-        }
-
-
-        .mission-row.done {
-
-            background: #d9ffe5;
-
-            color: #07883e;
-
-            font-weight: bold;
-        }
-
-
-        .mission-row.current {
-
-            border: 2px solid #ffd166;
-
-            background: #fff9e6;
-        }
-
-
-        .mission-code {
-
-            font-size: 13px;
-
-            color: #999;
-
-            margin-right: 5px;
-        }
-
-
-        .mission-name {
-
-            font-size: 17px;
-        }
-
-
-        .message {
-
-            min-height: 28px;
-
-            margin-top: 12px;
-
-            font-weight: bold;
-
-            line-height: 1.5;
-        }
-
-
-        .success {
-
-            color: #06a847;
-        }
-
-
-        .error {
-
-            color: #d9485f;
-        }
-
-
-        .warning {
-
-            color: #d88900;
-        }
-
-
-        .lottery {
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #fff4d6,
-                    #ffe1e8
-                );
-
-            padding: 20px;
-
-            border-radius: 18px;
-
-            margin: 20px 0;
-
-            line-height: 1.8;
-        }
-
-
-        .lottery-icon {
-
-            font-size: 55px;
-
-            margin-bottom: 5px;
-        }
-
-
-        .progress-box {
-
-            background: #f7f7f7;
-
-            border-radius: 15px;
-
-            padding: 15px;
-
-            margin: 20px 0;
-        }
-
-
-        .progress-bar {
-
-            width: 100%;
-
-            height: 14px;
-
-            background: #eee;
-
-            border-radius: 20px;
-
-            overflow: hidden;
-
-            margin-top: 10px;
-        }
-
-
-        .progress-fill {
-
-            height: 100%;
-
-            background:
-                linear-gradient(
-                    90deg,
-                    #06c755,
-                    #00a8ff
-                );
-
-            border-radius: 20px;
-
-            transition: width 0.4s ease;
-        }
-
-
-        .small {
-
-            font-size: 14px;
-
-            color: #888;
-
-            line-height: 1.6;
-        }
-
-
-        .qr-info {
-
-            background: #fff9e6;
-
-            border: 1px solid #ffe08a;
-
-            padding: 15px;
-
-            border-radius: 15px;
-
-            margin: 20px 0;
-
-            line-height: 1.7;
-        }
-
-
-        .loading {
-
-            padding: 20px 0;
-
-            color: #777;
-        }
-
-    </style>
-
-</head>
-
-
-<body>
-
-<div
-    class="container"
-    id="app"
+<!DOCTYPE html> <html lang="zh-TW"> <head>
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
 >
 
-    <div class="logo">
-        🎉
-    </div>
+<title>旺年會闖關</title>
 
-    <h1>
-        旺年會闖關
-    </h1>
+<!-- LINE LIFF SDK -->
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 
-    <div class="subtitle">
-        歡迎參加今年的旺年會活動！
-    </div>
+<style>
 
-    <div
-        class="user"
-        id="userInfo"
-    >
-        LINE 登入中...
-    </div>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+
+        margin: 0;
+
+        font-family:
+            -apple-system,
+            BlinkMacSystemFont,
+            "Noto Sans TC",
+            Arial,
+            sans-serif;
+
+        background:
+            linear-gradient(
+                135deg,
+                #fff4d6,
+                #ffe4ec
+            );
+
+        min-height: 100vh;
+
+        display: flex;
+
+        justify-content: center;
+
+        align-items: center;
+
+        color: #333;
+
+        padding: 20px;
+    }
+
+    .container {
+
+        width: 100%;
+
+        max-width: 430px;
+
+        background: white;
+
+        border-radius: 24px;
+
+        padding: 30px 22px;
+
+        text-align: center;
+
+        box-shadow:
+            0 10px 30px
+            rgba(0, 0, 0, 0.12);
+    }
+
+    .logo {
+
+        font-size: 60px;
+
+        margin-bottom: 8px;
+    }
+
+    h1 {
+
+        color: #d9485f;
+
+        margin: 10px 0;
+
+        font-size: 27px;
+    }
+
+    h2 {
+
+        font-size: 20px;
+
+        line-height: 1.5;
+    }
+
+    .subtitle {
+
+        color: #777;
+
+        margin-bottom: 20px;
+
+        line-height: 1.6;
+    }
+
+    .user {
+
+        background: #f7f7f7;
+
+        padding: 12px;
+
+        border-radius: 12px;
+
+        margin-bottom: 20px;
+
+        line-height: 1.6;
+    }
+
+    input {
+
+        width: 100%;
+
+        padding: 15px;
+
+        border: 1px solid #ddd;
+
+        border-radius: 10px;
+
+        font-size: 16px;
+
+        margin-bottom: 15px;
+
+        outline: none;
+    }
+
+    input:focus {
+
+        border-color: #06c755;
+
+        box-shadow:
+            0 0 0 3px
+            rgba(6, 199, 85, 0.12);
+    }
+
+    button {
+
+        width: 100%;
+
+        padding: 15px;
+
+        border: none;
+
+        border-radius: 12px;
+
+        background: #06c755;
+
+        color: white;
+
+        font-size: 17px;
+
+        font-weight: bold;
+
+        cursor: pointer;
+
+        margin-bottom: 10px;
+    }
+
+    button:active {
+
+        transform: scale(0.97);
+    }
+
+    button:disabled {
+
+        background: #aaa;
+
+        cursor: not-allowed;
+
+        transform: none;
+    }
+
+    .secondary {
+
+        background: #777;
+    }
+
+    .mission-list {
+
+        text-align: left;
+
+        margin: 20px 0;
+    }
+
+    .mission-row {
+
+        padding: 14px;
+
+        margin-bottom: 9px;
+
+        border-radius: 12px;
+
+        background: #f7f7f7;
+
+        line-height: 1.5;
+    }
+
+    .mission-row.done {
+
+        background: #d9ffe5;
+
+        color: #07883e;
+
+        font-weight: bold;
+    }
+
+    .mission-code {
+
+        font-size: 13px;
+
+        color: #999;
+
+        margin-right: 5px;
+    }
+
+    .mission-name {
+
+        font-size: 17px;
+    }
+
+    .message {
+
+        min-height: 28px;
+
+        margin-top: 12px;
+
+        font-weight: bold;
+
+        line-height: 1.5;
+    }
+
+    .success {
+
+        color: #06a847;
+    }
+
+    .error {
+
+        color: #d9485f;
+    }
+
+    .warning {
+
+        color: #d88900;
+    }
+
+    .lottery {
+
+        background:
+            linear-gradient(
+                135deg,
+                #fff4d6,
+                #ffe1e8
+            );
+
+        padding: 20px;
+
+        border-radius: 18px;
+
+        margin: 20px 0;
+
+        line-height: 1.8;
+    }
+
+    .lottery-icon {
+
+        font-size: 55px;
+
+        margin-bottom: 5px;
+    }
+
+    .progress-box {
+
+        background: #f7f7f7;
+
+        border-radius: 15px;
+
+        padding: 15px;
+
+        margin: 20px 0;
+    }
+
+    .progress-bar {
+
+        width: 100%;
+
+        height: 14px;
+
+        background: #eee;
+
+        border-radius: 20px;
+
+        overflow: hidden;
+
+        margin-top: 10px;
+    }
+
+    .progress-fill {
+
+        height: 100%;
+
+        background:
+            linear-gradient(
+                90deg,
+                #06c755,
+                #00a8ff
+            );
+
+        border-radius: 20px;
+
+        transition: width 0.4s ease;
+    }
+
+    .small {
+
+        font-size: 14px;
+
+        color: #888;
+
+        line-height: 1.6;
+    }
+
+    .qr-info {
+
+        background: #fff9e6;
+
+        border: 1px solid #ffe08a;
+
+        padding: 15px;
+
+        border-radius: 15px;
+
+        margin: 20px 0;
+
+        line-height: 1.7;
+    }
+
+    .loading {
+
+        padding: 20px 0;
+
+        color: #777;
+    }
+
+    .debug {
+
+        margin-top: 15px;
+
+        padding: 10px;
+
+        background: #f3f3f3;
+
+        border-radius: 10px;
+
+        font-size: 12px;
+
+        color: #777;
+
+        text-align: left;
+
+        word-break: break-all;
+    }
+
+</style>
+
+</head> <body> <div class="container" id="app" >
+<div class="logo">
+    🎉
+</div>
+
+<h1>
+    旺年會闖關
+</h1>
+
+<div class="subtitle">
+    歡迎參加今年的旺年會活動！
+</div>
+
+<div
+    class="user"
+    id="userInfo"
+>
+    LINE 登入中...
+</div>
+
+<div
+    id="registerArea"
+>
 
     <input
         type="text"
         id="employeeNo"
         placeholder="請輸入員工工號"
         autocomplete="off"
+        maxlength="50"
     >
 
     <button
         id="startButton"
+        type="button"
         onclick="registerAndStart()"
         disabled
     >
         🚀 開始闖關
     </button>
 
-    <div
-        class="message"
-        id="message"
-    ></div>
-
 </div>
 
+<div
+    class="message"
+    id="message"
+></div>
 
-<script>
-
-
+</div> <script>
 // ==================================================
 // 基本設定
 // ==================================================
 
 const LIFF_ID =
-    "2011685953-o8qvyQfR";
-
-
-// ==================================================
-// ⚠️ 非常重要
-//
-// 這裡必須改成你的 ASP.NET Core API 公開網址
-//
-// 例如：
-// https://api.xxxxx.com
-//
-// 如果你目前 Visual Studio 本機測試：
-// https://localhost:7086
-//
-// 正式 GitHub Pages 上線時不能使用 localhost。
-// ==================================================
+"2011685953-o8qvyQfR";
 
 const API_BASE =
-    "https://newsapi.winmen.com.tw";
-
+"https://newsapi.winmen.com.tw";
 
 // ==================================================
 // 六個關卡
@@ -475,32 +433,31 @@ const API_BASE =
 
 const MISSIONS = {
 
-    M01: {
-        name: "飛鏢機"
-    },
+M01: {
+    name: "飛鏢機"
+},
 
-    M02: {
-        name: "酒館推推樂"
-    },
+M02: {
+    name: "酒館推推樂"
+},
 
-    M03: {
-        name: "沙漠酒桶投擲"
-    },
+M03: {
+    name: "沙漠酒桶投擲"
+},
 
-    M04: {
-        name: "水彈射擊"
-    },
+M04: {
+    name: "水彈射擊"
+},
 
-    M05: {
-        name: "套圈圈"
-    },
+M05: {
+    name: "套圈圈"
+},
 
-    M06: {
-        name: "牛仔腰力王"
-    }
+M06: {
+    name: "牛仔腰力王"
+}
 
 };
-
 
 // ==================================================
 // 全域資料
@@ -514,46 +471,148 @@ let currentDisplayName = "";
 
 let currentEmployeeNo = "";
 
+let currentMissionCode = "";
+
+let currentMissionToken = "";
 
 // ==================================================
-// 工號、LINE 資料
+// DOM 工具
+// ==================================================
+
+function getElement(id) {
+
+return document.getElementById(id);
+
+}
+
+// ==================================================
+// 顯示訊息
+// ==================================================
+
+function setMessage(
+message,
+type = "error"
+) {
+
+const element =
+    getElement("message");
+
+if (!element) {
+
+    return;
+
+}
+
+element.innerHTML =
+
+    `<span class="${type}">
+        ${escapeHtml(message)}
+    </span>`;
+
+}
+
+// ==================================================
+// 還原 Session
 // ==================================================
 
 function restoreSession() {
 
-    currentLineUserId =
-        sessionStorage.getItem(
-            "lineUserId"
-        ) || "";
+currentLineUserId =
+    sessionStorage.getItem(
+        "lineUserId"
+    ) || currentLineUserId || "";
 
-    currentDisplayName =
-        sessionStorage.getItem(
-            "lineDisplayName"
-        ) || "";
+currentDisplayName =
+    sessionStorage.getItem(
+        "lineDisplayName"
+    ) || currentDisplayName || "";
 
-    currentEmployeeNo =
-        sessionStorage.getItem(
-            "employeeNo"
-        ) || "";
+currentEmployeeNo =
+    sessionStorage.getItem(
+        "employeeNo"
+    ) || currentEmployeeNo || "";
 
+const employeeInput =
+    getElement("employeeNo");
 
-    const employeeInput =
-        document.getElementById(
-            "employeeNo"
-        );
+if (
+    employeeInput &&
+    currentEmployeeNo
+) {
 
-
-    if (
-        employeeInput &&
-        currentEmployeeNo
-    ) {
-
-        employeeInput.value =
-            currentEmployeeNo;
-    }
+    employeeInput.value =
+        currentEmployeeNo;
 
 }
 
+}
+
+// ==================================================
+// 儲存 Session
+// ==================================================
+
+function saveSession() {
+
+if (currentLineUserId) {
+
+    sessionStorage.setItem(
+        "lineUserId",
+        currentLineUserId
+    );
+
+}
+
+if (currentDisplayName) {
+
+    sessionStorage.setItem(
+        "lineDisplayName",
+        currentDisplayName
+    );
+
+}
+
+if (currentEmployeeNo) {
+
+    sessionStorage.setItem(
+        "employeeNo",
+        currentEmployeeNo
+    );
+
+}
+
+}
+
+// ==================================================
+// API JSON 安全讀取
+// ==================================================
+
+async function readJson(
+response
+) {
+
+const text =
+    await response.text();
+
+if (!text) {
+
+    return {};
+
+}
+
+try {
+
+    return JSON.parse(text);
+
+}
+catch {
+
+    return {
+        message: text
+    };
+
+}
+
+}
 
 // ==================================================
 // LIFF 初始化
@@ -561,141 +620,240 @@ function restoreSession() {
 
 async function initLIFF() {
 
-    try {
+try {
 
-        await liff.init({
-            liffId: LIFF_ID
+    console.log(
+        "[LIFF] 初始化開始"
+    );
+
+    await liff.init({
+        liffId: LIFF_ID
+    });
+
+    console.log(
+        "[LIFF] 初始化成功"
+    );
+
+    // ==========================================
+    // 尚未登入 LINE
+    // ==========================================
+
+    if (!liff.isLoggedIn()) {
+
+        document.getElementById(
+            "userInfo"
+        ).innerHTML =
+
+            `<span class="warning">
+                正在開啟 LINE 登入...
+            </span>`;
+
+        liff.login({
+            redirectUri:
+                window.location.href
         });
 
-
-        if (!liff.isLoggedIn()) {
-
-            liff.login();
-
-            return;
-        }
-
-
-        // ==========================================
-        // 取得 LINE ID Token
-        // ==========================================
-
-        const idToken =
-            liff.getIDToken();
-
-
-        if (!idToken) {
-
-            throw new Error(
-                "無法取得 LINE ID Token"
-            );
-        }
-
-
-        currentIdToken =
-            idToken;
-
-
-        // ==========================================
-        // 取得 LINE Profile
-        // ==========================================
-
-        const profile =
-            await liff.getProfile();
-
-
-        currentLineUserId =
-            profile.userId;
-
-        currentDisplayName =
-            profile.displayName;
-
-
-        sessionStorage.setItem(
-            "lineUserId",
-            profile.userId
-        );
-
-
-        sessionStorage.setItem(
-            "lineDisplayName",
-            profile.displayName
-        );
-
-
-        document.getElementById(
-            "userInfo"
-        ).innerHTML =
-
-            "你好，<strong>" +
-            escapeHtml(
-                profile.displayName
-            ) +
-            "</strong> 👋<br>" +
-
-            `<span class="small">
-                LINE 登入成功
-            </span>`;
-
-
-        document.getElementById(
-            "startButton"
-        ).disabled = false;
-
-
-        restoreSession();
-
-
-        // ==========================================
-        // 如果已經有工號
-        // 嘗試直接載入進度
-        // ==========================================
-
-        if (currentEmployeeNo) {
-
-            try {
-
-                await loadProgress();
-
-            }
-            catch (error) {
-
-                console.log(
-                    "尚未完成註冊，等待使用者輸入工號"
-                );
-
-            }
-
-        }
-
-
-        // ==========================================
-        // 檢查是不是從關卡 QR Code 進來
-        // ==========================================
-
-        await checkMissionQRCode();
+        return;
 
     }
-    catch (error) {
 
-        console.error(error);
+    // ==========================================
+    // 取得 ID Token
+    // ==========================================
 
+    currentIdToken =
+        liff.getIDToken();
 
-        document.getElementById(
-            "userInfo"
-        ).innerHTML =
+    if (!currentIdToken) {
 
-            `<span class="error">
-                LINE 登入失敗
-                <br>
-                ${escapeHtml(
-                    error.message
-                )}
-            </span>`;
+        throw new Error(
+            "無法取得 LINE ID Token，請重新開啟 LIFF"
+        );
+
+    }
+
+    console.log(
+        "[LIFF] ID Token 已取得"
+    );
+
+    // ==========================================
+    // 取得 LINE Profile
+    // ==========================================
+
+    const profile =
+        await liff.getProfile();
+
+    if (!profile ||
+        !profile.userId) {
+
+        throw new Error(
+            "無法取得 LINE 使用者資料"
+        );
+
+    }
+
+    currentLineUserId =
+        profile.userId;
+
+    currentDisplayName =
+        profile.displayName || "";
+
+    saveSession();
+
+    document.getElementById(
+        "userInfo"
+    ).innerHTML =
+
+        "你好，<strong>" +
+
+        escapeHtml(
+            currentDisplayName
+        ) +
+
+        "</strong> 👋<br>" +
+
+        `<span class="small">
+            LINE 登入成功
+        </span>`;
+
+    const startButton =
+        getElement("startButton");
+
+    if (startButton) {
+
+        startButton.disabled =
+            false;
+
+    }
+
+    // ==========================================
+    // 還原工號
+    // ==========================================
+
+    restoreSession();
+
+    // ==========================================
+    // 先讀取 URL 的 QR Code
+    // ==========================================
+
+    readMissionQRCode();
+
+    // ==========================================
+    // 已有工號 → 自動查詢進度
+    // ==========================================
+
+    if (currentEmployeeNo) {
+
+        try {
+
+            await loadProgress();
+
+        }
+        catch (error) {
+
+            console.log(
+                "[LIFF] 尚未完成註冊:",
+                error
+            );
+
+        }
+
+    }
+
+    // ==========================================
+    // 如果 QR Code 已經存在
+    // 且已有工號
+    // 則自動完成關卡
+    // ==========================================
+
+    if (
+        currentMissionCode &&
+        currentMissionToken &&
+        currentLineUserId &&
+        currentEmployeeNo
+    ) {
+
+        await completeMission(
+            currentMissionCode,
+            currentMissionToken
+        );
+
+    }
+
+}
+catch (error) {
+
+    console.error(
+        "[LIFF] 初始化錯誤:",
+        error
+    );
+
+    document.getElementById(
+        "userInfo"
+    ).innerHTML =
+
+        `<span class="error">
+            LINE 登入失敗
+            <br><br>
+            ${escapeHtml(
+                error.message ||
+                "未知錯誤"
+            )}
+        </span>`;
+
+    const startButton =
+        getElement("startButton");
+
+    if (startButton) {
+
+        startButton.disabled =
+            true;
+
     }
 
 }
 
+}
+
+// ==================================================
+// 讀取 QR Code 參數
+// ==================================================
+
+function readMissionQRCode() {
+
+const params =
+    new URLSearchParams(
+        window.location.search
+    );
+
+currentMissionCode =
+    (
+        params.get("mission") ||
+        ""
+    )
+    .trim()
+    .toUpperCase();
+
+currentMissionToken =
+    (
+        params.get("token") ||
+        ""
+    )
+    .trim();
+
+console.log(
+    "[QR] mission:",
+    currentMissionCode
+);
+
+console.log(
+    "[QR] token:",
+    currentMissionToken
+        ? "存在"
+        : "不存在"
+);
+
+}
 
 // ==================================================
 // LINE + 工號註冊
@@ -703,163 +861,250 @@ async function initLIFF() {
 
 async function registerAndStart() {
 
-    const employeeNo =
-        document
-            .getElementById(
-                "employeeNo"
-            )
-            .value
-            .trim();
+console.log(
+    "[REGISTER] 開始"
+);
 
+const employeeInput =
+    getElement("employeeNo");
 
-    const message =
-        document.getElementById(
-            "message"
-        );
+const button =
+    getElement("startButton");
 
+const message =
+    getElement("message");
 
-    if (!employeeNo) {
+if (!employeeInput) {
 
-        message.innerHTML =
+    console.error(
+        "[REGISTER] 找不到 employeeNo"
+    );
 
-            `<span class="error">
-                請先輸入員工工號
-            </span>`;
+    return;
 
-        return;
-    }
+}
 
+const employeeNo =
+    employeeInput.value.trim();
 
-    if (!currentIdToken) {
+// ==========================================
+// 工號檢查
+// ==========================================
 
-        message.innerHTML =
+if (!employeeNo) {
 
-            `<span class="error">
-                LINE 尚未完成登入
-            </span>`;
+    setMessage(
+        "請先輸入員工工號"
+    );
 
-        return;
-    }
+    employeeInput.focus();
 
+    return;
 
-    const button =
-        document.getElementById(
-            "startButton"
-        );
+}
 
+// ==========================================
+// LINE Token 檢查
+// ==========================================
+
+if (!currentIdToken) {
+
+    setMessage(
+        "LINE 尚未完成登入，請重新開啟頁面"
+    );
+
+    return;
+
+}
+
+// ==========================================
+// LINE User ID 檢查
+// ==========================================
+
+if (!currentLineUserId) {
+
+    setMessage(
+        "無法取得 LINE 使用者 ID，請重新開啟 LINE"
+    );
+
+    return;
+
+}
+
+if (button) {
 
     button.disabled = true;
 
     button.innerText =
         "登入中...";
 
+}
 
-    try {
+if (message) {
 
-        const response =
-            await fetch(
-                `${API_BASE}/api/auth/register`,
-                {
-                    method: "POST",
+    message.innerHTML =
 
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
+        `<span class="warning">
+            ⏳ 正在驗證工號，請稍候...
+        </span>`;
 
-                    body:
-                        JSON.stringify({
+}
 
-                            idToken:
-                                currentIdToken,
+try {
 
-                            employeeNo:
-                                employeeNo
+    console.log(
+        "[REGISTER] API:",
+        `${API_BASE}/api/auth/register`
+    );
 
-                        })
-                }
-            );
+    const response =
+        await fetch(
+            `${API_BASE}/api/auth/register`,
+            {
+                method: "POST",
 
+                headers: {
+                    "Content-Type":
+                        "application/json",
 
-        const result =
-            await response.json();
+                    "Accept":
+                        "application/json"
+                },
 
+                body:
+                    JSON.stringify({
 
-        if (!response.ok) {
+                        idToken:
+                            currentIdToken,
 
-            throw new Error(
-                result.message ||
-                "登入失敗"
-            );
-        }
+                        employeeNo:
+                            employeeNo
 
-
-        currentEmployeeNo =
-            result.employeeNo;
-
-        currentLineUserId =
-            result.lineUserId;
-
-        currentDisplayName =
-            result.displayName;
-
-
-        sessionStorage.setItem(
-            "employeeNo",
-            result.employeeNo
+                    })
+            }
         );
 
+    console.log(
+        "[REGISTER] HTTP:",
+        response.status
+    );
 
-        sessionStorage.setItem(
-            "lineUserId",
-            result.lineUserId
+    const result =
+        await readJson(response);
+
+    console.log(
+        "[REGISTER] result:",
+        result
+    );
+
+    if (!response.ok) {
+
+        throw new Error(
+            result.message ||
+            `登入失敗（HTTP ${response.status}）`
         );
-
-
-        sessionStorage.setItem(
-            "lineDisplayName",
-            result.displayName || ""
-        );
-
-
-        // ==========================================
-        // 註冊成功後查詢進度
-        // ==========================================
-
-        await loadProgress();
-
-
-        // ==========================================
-        // 如果是從關卡 QR Code 進來
-        // 自動完成該關
-        // ==========================================
-
-        await checkMissionQRCode();
 
     }
-    catch (error) {
 
-        console.error(error);
+    if (result.success !== true) {
 
+        throw new Error(
+            result.message ||
+            "工號註冊失敗"
+        );
+
+    }
+
+    // ==========================================
+    // 儲存資料
+    // ==========================================
+
+    currentEmployeeNo =
+        result.employeeNo ||
+        employeeNo;
+
+    currentLineUserId =
+        result.lineUserId ||
+        currentLineUserId;
+
+    currentDisplayName =
+        result.displayName ||
+        currentDisplayName;
+
+    saveSession();
+
+    // ==========================================
+    // 如果有 QR Code
+    // ==========================================
+
+    if (
+        currentMissionCode &&
+        !currentMissionToken
+    ) {
+
+        showErrorPage(
+            "QR Code 缺少關卡驗證碼"
+        );
+
+        return;
+
+    }
+
+    if (
+        currentMissionCode &&
+        currentMissionToken
+    ) {
+
+        await completeMission(
+            currentMissionCode,
+            currentMissionToken
+        );
+
+        return;
+
+    }
+
+    // ==========================================
+    // 一般登入
+    // ==========================================
+
+    await loadProgress();
+
+}
+catch (error) {
+
+    console.error(
+        "[REGISTER] 錯誤:",
+        error
+    );
+
+    if (message) {
 
         message.innerHTML =
 
             `<span class="error">
                 ❌
                 ${escapeHtml(
-                    error.message
+                    error.message ||
+                    "登入失敗"
                 )}
             </span>`;
 
+    }
 
-        button.disabled = false;
+    if (button) {
+
+        button.disabled =
+            false;
 
         button.innerText =
             "🚀 開始闖關";
+
     }
 
 }
 
+}
 
 // ==================================================
 // 查詢闖關進度
@@ -867,160 +1112,185 @@ async function registerAndStart() {
 
 async function loadProgress() {
 
-    restoreSession();
+restoreSession();
 
+if (
+    !currentLineUserId ||
+    !currentEmployeeNo
+) {
 
-    if (
-        !currentLineUserId ||
-        !currentEmployeeNo
-    ) {
-
-        throw new Error(
-            "尚未完成 LINE 登入與工號登記"
-        );
-
-    }
-
-
-    const response =
-        await fetch(
-            `${API_BASE}/api/game/progress` +
-
-            `?lineUserId=${encodeURIComponent(
-                currentLineUserId
-            )}` +
-
-            `&employeeNo=${encodeURIComponent(
-                currentEmployeeNo
-            )}`
-        );
-
-
-    const result =
-        await response.json();
-
-
-    if (!response.ok) {
-
-        throw new Error(
-            result.message ||
-            "無法取得闖關進度"
-        );
-    }
-
-
-    showMissionBoard(
-        result
+    throw new Error(
+        "尚未完成 LINE 登入與工號登記"
     );
 
-
-    return result;
 }
 
+console.log(
+    "[PROGRESS] 查詢:",
+    currentLineUserId,
+    currentEmployeeNo
+);
+
+const url =
+    `${API_BASE}/api/game/progress` +
+
+    `?lineUserId=${encodeURIComponent(
+        currentLineUserId
+    )}` +
+
+    `&employeeNo=${encodeURIComponent(
+        currentEmployeeNo
+    )}`;
+
+const response =
+    await fetch(
+        url,
+        {
+            method: "GET",
+
+            headers: {
+                "Accept":
+                    "application/json"
+            }
+        }
+    );
+
+console.log(
+    "[PROGRESS] HTTP:",
+    response.status
+);
+
+const result =
+    await readJson(response);
+
+if (!response.ok) {
+
+    throw new Error(
+        result.message ||
+        `無法取得闖關進度（HTTP ${response.status}）`
+    );
+
+}
+
+if (result.success !== true) {
+
+    throw new Error(
+        result.message ||
+        "無法取得闖關進度"
+    );
+
+}
+
+showMissionBoard(
+    result
+);
+
+return result;
+
+}
 
 // ==================================================
 // 關卡首頁
 // ==================================================
 
 function showMissionBoard(
-    progress
+progress
 ) {
 
-    const container =
-        document.getElementById(
-            "app"
+const container =
+    getElement("app");
+
+const missions =
+    progress.missions || [];
+
+const completedCount =
+    missions.filter(
+        x => x.completed
+    ).length;
+
+const totalMissions =
+    missions.length;
+
+const allCompleted =
+    progress.allCompleted === true ||
+    (
+        totalMissions > 0 &&
+        completedCount === totalMissions
+    );
+
+const percentage =
+    totalMissions === 0
+        ? 0
+        : Math.round(
+            completedCount /
+            totalMissions *
+            100
         );
 
+currentDisplayName =
+    progress.participant?.displayName ||
+    currentDisplayName;
 
-    const missions =
-        progress.missions || [];
+currentEmployeeNo =
+    progress.participant?.employeeNo ||
+    currentEmployeeNo;
 
+saveSession();
 
-    const completedCount =
-        missions.filter(
-            x => x.completed
-        ).length;
+container.innerHTML = `
 
+    <div class="logo">
+        🎯
+    </div>
 
-    const totalMissions =
-        missions.length;
+    <h1>
+        旺年會闖關
+    </h1>
 
+    <div class="subtitle">
 
-    const allCompleted =
-        progress.allCompleted ||
-        (
-            totalMissions > 0 &&
-            completedCount === totalMissions
-        );
+        ${escapeHtml(
+            currentDisplayName
+        )}
 
+        <br>
 
-    const percentage =
-        totalMissions === 0
-            ? 0
-            : Math.round(
-                completedCount /
-                totalMissions *
-                100
-            );
+        工號：
 
+        ${escapeHtml(
+            currentEmployeeNo
+        )}
 
-    container.innerHTML = `
+    </div>
 
-        <div class="logo">
-            🎯
-        </div>
+    <div class="progress-box">
 
-        <h1>
-            旺年會闖關
-        </h1>
+        <strong>
+            闖關進度
+        </strong>
 
-        <div class="subtitle">
+        <br>
 
-            ${escapeHtml(
-                progress.participant.displayName ||
-                currentDisplayName ||
-                ""
-            )}
+        ${completedCount}
+        /
+        ${totalMissions}
+        關
 
-            <br>
+        <div class="progress-bar">
 
-            工號：
-
-            ${escapeHtml(
-                progress.participant.employeeNo
-            )}
+            <div
+                class="progress-fill"
+                style="width:${percentage}%"
+            ></div>
 
         </div>
 
+    </div>
 
-        <div class="progress-box">
+    <div class="mission-list">
 
-            <strong>
-                闖關進度
-            </strong>
-
-            <br>
-
-            ${completedCount}
-            /
-            ${totalMissions}
-            關
-
-            <div class="progress-bar">
-
-                <div
-                    class="progress-fill"
-                    style="width:${percentage}%"
-                ></div>
-
-            </div>
-
-        </div>
-
-
-        <div class="mission-list">
-
-            ${missions.map(
+        ${
+            missions.map(
                 mission => {
 
                     const code =
@@ -1032,7 +1302,10 @@ function showMissionBoard(
                     const missionName =
                         missionInfo
                             ? missionInfo.name
-                            : code;
+                            : (
+                                mission.name ||
+                                code
+                            );
 
                     return `
 
@@ -1054,15 +1327,19 @@ function showMissionBoard(
                             }
 
                             <span class="mission-code">
+
                                 ${escapeHtml(
                                     code
                                 )}
+
                             </span>
 
                             <span class="mission-name">
+
                                 ${escapeHtml(
                                     missionName
                                 )}
+
                             </span>
 
                             <br>
@@ -1082,538 +1359,461 @@ function showMissionBoard(
                     `;
 
                 }
-            ).join("")}
-
-        </div>
-
-
-        ${
-            allCompleted
-                ? `
-
-                    <div class="lottery">
-
-                        🎊
-
-                        <br>
-
-                        <strong>
-                            六關全部完成！
-                        </strong>
-
-                        <br><br>
-
-                        已完成全部闖關，
-                        可以送出抽獎資料。
-
-                    </div>
-
-
-                    ${
-                        progress.lotterySubmitted
-                            ? `
-
-                                <button
-                                    onclick="showLotterySuccess()"
-                                >
-                                    🎟️ 查看抽獎資格
-                                </button>
-
-                            `
-                            : `
-
-                                <button
-                                    onclick="showLotterySubmit()"
-                                >
-                                    🎟️ 送出抽獎資料
-                                </button>
-
-                            `
-                    }
-
-                `
-                : `
-
-                    <div class="qr-info">
-
-                        📱
-
-                        <br>
-
-                        請到現場完成各項遊戲。
-
-                        <br>
-
-                        每完成一關，
-
-                        <br>
-
-                        掃描該關 QR Code
-                        記錄闖關進度。
-
-                    </div>
-
-                `
+            ).join("")
         }
 
+    </div>
 
-        <div
-            id="message"
-            class="message"
-        ></div>
+    ${
+        allCompleted
+            ? `
 
-    `;
+                <div class="lottery">
 
+                    🎊
 
-    currentDisplayName =
-        progress.participant.displayName ||
-        currentDisplayName;
+                    <br>
+
+                    <strong>
+                        六關全部完成！
+                    </strong>
+
+                    <br><br>
+
+                    已完成全部闖關，
+                    可以送出抽獎資料。
+
+                </div>
+
+                ${
+                    progress.lotterySubmitted
+                        ? `
+
+                            <button
+                                type="button"
+                                onclick="showLotterySuccess()"
+                            >
+                                🎟️ 查看抽獎資格
+                            </button>
+
+                        `
+                        : `
+
+                            <button
+                                type="button"
+                                onclick="showLotterySubmit()"
+                            >
+                                🎟️ 送出抽獎資料
+                            </button>
+
+                        `
+                }
+
+            `
+            : `
+
+                <div class="qr-info">
+
+                    📱
+
+                    <br>
+
+                    請到現場完成各項遊戲。
+
+                    <br>
+
+                    每完成一關，
+
+                    <br>
+
+                    掃描該關 QR Code
+                    記錄闖關進度。
+
+                </div>
+
+            `
+    }
+
+    <div
+        id="message"
+        class="message"
+    ></div>
+
+`;
 
 }
 
-
 // ==================================================
-// 檢查 QR Code
-//
-// QR Code URL 範例：
-//
-// https://liff.line.me/2011685953-o8qvyQfR
-// ?mission=M01
-// &token=xxxxxxxx
-//
-// ==================================================
-
-async function checkMissionQRCode() {
-
-    const params =
-        new URLSearchParams(
-            window.location.search
-        );
-
-
-    const missionCode =
-        (
-            params.get("mission") ||
-            ""
-        )
-        .trim()
-        .toUpperCase();
-
-
-    const token =
-        (
-            params.get("token") ||
-            ""
-        ).trim();
-
-
-    // 沒有關卡參數
-    if (!missionCode) {
-
-        return;
-
-    }
-
-
-    // ==========================================
-    // 確認關卡
-    // ==========================================
-
-    if (!MISSIONS[missionCode]) {
-
-        showError(
-            "QR Code 的關卡代碼無效"
-        );
-
-        return;
-
-    }
-
-
-    // ==========================================
-    // 尚未登入／沒有工號
-    // ==========================================
-
-    if (
-        !currentLineUserId ||
-        !currentEmployeeNo
-    ) {
-
-        showMissionQRWaiting(
-            missionCode
-        );
-
-        return;
-
-    }
-
-
-    // ==========================================
-    // QR Code 沒有 Token
-    // ==========================================
-
-    if (!token) {
-
-        showError(
-            "QR Code 缺少關卡驗證碼"
-        );
-
-        return;
-
-    }
-
-
-    await completeMission(
-        missionCode,
-        token
-    );
-
-}
-
-
-// ==================================================
-// QR Code 尚未完成登入
+// 顯示 QR Code 等待輸入工號
 // ==================================================
 
 function showMissionQRWaiting(
-    missionCode
+missionCode
 ) {
 
-    const container =
-        document.getElementById(
-            "app"
-        );
+const container =
+    getElement("app");
 
+const missionName =
+    MISSIONS[missionCode]
+        ? MISSIONS[missionCode].name
+        : missionCode;
 
-    const missionName =
-        MISSIONS[missionCode]
-            ? MISSIONS[missionCode].name
-            : missionCode;
+container.innerHTML = `
 
+    <div class="logo">
+        🎯
+    </div>
 
-    container.innerHTML = `
+    <h1>
+        ${escapeHtml(
+            missionName
+        )}
+    </h1>
 
-        <div class="logo">
-            🎯
-        </div>
+    <div class="qr-info">
 
-        <h1>
+        已掃描：
+
+        <strong>
             ${escapeHtml(
-                missionName
+                missionCode
             )}
-        </h1>
+        </strong>
 
-        <div class="qr-info">
+        <br><br>
 
-            已掃描：
+        請先輸入員工工號。
 
-            <strong>
-                ${escapeHtml(
-                    missionCode
-                )}
-            </strong>
+    </div>
 
-            <br><br>
+    <input
+        type="text"
+        id="employeeNo"
+        placeholder="請輸入員工工號"
+        autocomplete="off"
+        maxlength="50"
+    >
 
-            請先輸入員工工號。
+    <button
+        type="button"
+        id="startButton"
+        onclick="registerAndStart()"
+    >
+        🚀 登入並完成此關
+    </button>
 
-        </div>
+    <div
+        id="message"
+        class="message"
+    ></div>
 
-        <input
-            type="text"
-            id="employeeNo"
-            placeholder="請輸入員工工號"
-            autocomplete="off"
-        >
+`;
 
-        <button
-            onclick="registerAndStart()"
-        >
-            🚀 登入並完成此關
-        </button>
-
-        <div
-            id="message"
-            class="message"
-        ></div>
-
-    `;
+restoreSession();
 
 }
-
 
 // ==================================================
 // 完成關卡
 // ==================================================
 
 async function completeMission(
-    missionCode,
-    missionToken
+missionCode,
+missionToken
 ) {
+
+restoreSession();
+
+if (
+    !currentLineUserId ||
+    !currentEmployeeNo
+) {
+
+    showMissionQRWaiting(
+        missionCode
+    );
+
+    return;
+
+}
+
+if (!missionToken) {
+
+    showErrorPage(
+        "QR Code 缺少關卡驗證碼"
+    );
+
+    return;
+
+}
+
+const missionInfo =
+    MISSIONS[missionCode];
+
+const missionName =
+    missionInfo
+        ? missionInfo.name
+        : missionCode;
+
+const container =
+    getElement("app");
+
+container.innerHTML = `
+
+    <div class="logo">
+        🎯
+    </div>
+
+    <h1>
+        ${escapeHtml(
+            missionName
+        )}
+    </h1>
+
+    <div class="loading">
+
+        正在驗證闖關資料...
+
+        <br><br>
+
+        ⏳ 請稍候
+
+    </div>
+
+`;
+
+try {
+
+    console.log(
+        "[MISSION] 完成:",
+        missionCode
+    );
+
+    const response =
+        await fetch(
+            `${API_BASE}/api/game/complete-mission`,
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/json",
+
+                    "Accept":
+                        "application/json"
+                },
+
+                body:
+                    JSON.stringify({
+
+                        lineUserId:
+                            currentLineUserId,
+
+                        employeeNo:
+                            currentEmployeeNo,
+
+                        missionCode:
+                            missionCode,
+
+                        missionToken:
+                            missionToken
+
+                    })
+            }
+        );
+
+    console.log(
+        "[MISSION] HTTP:",
+        response.status
+    );
+
+    const result =
+        await readJson(response);
+
+    console.log(
+        "[MISSION] result:",
+        result
+    );
+
+    if (!response.ok) {
+
+        throw new Error(
+            result.message ||
+            `關卡驗證失敗（HTTP ${response.status}）`
+        );
+
+    }
+
+    if (result.success !== true) {
+
+        throw new Error(
+            result.message ||
+            "關卡驗證失敗"
+        );
+
+    }
+
+    showMissionSuccess(
+        result,
+        missionName
+    );
+
+    // ==========================================
+    // 清除 QR URL
+    // ==========================================
 
     try {
 
-        restoreSession();
-
-
-        if (
-            !currentLineUserId ||
-            !currentEmployeeNo
-        ) {
-
-            throw new Error(
-                "請先完成 LINE 登入與工號登記"
-            );
-
-        }
-
-
-        const container =
-            document.getElementById(
-                "app"
-            );
-
-
-        const missionName =
-            MISSIONS[missionCode]
-                ? MISSIONS[missionCode].name
-                : missionCode;
-
-
-        container.innerHTML = `
-
-            <div class="logo">
-                🎯
-            </div>
-
-            <h1>
-                ${escapeHtml(
-                    missionName
-                )}
-            </h1>
-
-            <div class="loading">
-
-                正在驗證闖關資料...
-
-                <br><br>
-
-                ⏳ 請稍候
-
-            </div>
-
-        `;
-
-
-        const response =
-            await fetch(
-                `${API_BASE}/api/game/complete-mission`,
-                {
-                    method: "POST",
-
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
-
-                    body:
-                        JSON.stringify({
-
-                            lineUserId:
-                                currentLineUserId,
-
-                            employeeNo:
-                                currentEmployeeNo,
-
-                            missionCode:
-                                missionCode,
-
-                            missionToken:
-                                missionToken
-
-                        })
-                }
-            );
-
-
-        const result =
-            await response.json();
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                result.message ||
-                "關卡驗證失敗"
-            );
-
-        }
-
-
-        showMissionSuccess(
-            result,
-            missionName
+        window.history.replaceState(
+            {},
+            document.title,
+            window.location.pathname
         );
 
-
-        // ==========================================
-        // 清掉 URL 上面的 QR Code 參數
-        // 避免重新整理時重複處理
-        // ==========================================
-
-        try {
-
-            window.history.replaceState(
-                {},
-                document.title,
-                window.location.pathname
-            );
-
-        }
-        catch (e) {
-
-            console.log(e);
-
-        }
-
     }
-    catch (error) {
+    catch (e) {
 
-        console.error(error);
-
-
-        showErrorPage(
-            error.message
+        console.log(
+            e
         );
 
     }
 
 }
+catch (error) {
 
+    console.error(
+        "[MISSION] 錯誤:",
+        error
+    );
+
+    showErrorPage(
+        error.message ||
+        "關卡驗證失敗"
+    );
+
+}
+
+}
 
 // ==================================================
 // 關卡完成畫面
 // ==================================================
 
 function showMissionSuccess(
-    result,
-    missionName
+result,
+missionName
 ) {
 
-    const container =
-        document.getElementById(
-            "app"
-        );
+const container =
+    getElement("app");
 
+const completedCount =
+    Number(
+        result.completedCount || 0
+    );
 
-    const completedCount =
-        result.completedCount ||
-        0;
+const totalMissions =
+    Number(
+        result.totalMissions || 6
+    );
 
+const allCompleted =
+    result.allCompleted === true;
 
-    const totalMissions =
-        result.totalMissions ||
-        6;
+container.innerHTML = `
 
+    <div class="logo">
+        🎉
+    </div>
 
-    const allCompleted =
-        result.allCompleted === true;
+    <h1>
+        闖關成功！
+    </h1>
 
+    <div class="lottery">
 
-    container.innerHTML = `
-
-        <div class="logo">
-            🎉
+        <div
+            style="
+                font-size:45px;
+            "
+        >
+            ✅
         </div>
 
-        <h1>
-            闖關成功！
-        </h1>
-
-
-        <div class="lottery">
-
-            <div
-                style="
-                    font-size:45px;
-                "
-            >
-                ✅
-            </div>
-
-            <strong>
-                ${escapeHtml(
-                    missionName
-                )}
-            </strong>
-
-            <br><br>
-
+        <strong>
             ${escapeHtml(
-                result.message ||
-                "闖關成功"
+                missionName
             )}
+        </strong>
 
-            <br><br>
+        <br><br>
 
-            已完成：
+        ${escapeHtml(
+            result.message ||
+            "闖關成功"
+        )}
 
-            <strong>
-                ${completedCount}
-                /
-                ${totalMissions}
-            </strong>
+        <br><br>
 
-        </div>
+        已完成：
 
+        <strong>
+            ${completedCount}
+            /
+            ${totalMissions}
+        </strong>
 
-        ${
-            allCompleted
-                ? `
+    </div>
 
-                    <div class="lottery">
+    ${
+        allCompleted
+            ? `
 
-                        🎊
+                <div class="lottery">
 
-                        <br>
+                    🎊
 
-                        <strong>
-                            六關全部完成！
-                        </strong>
+                    <br>
 
-                        <br><br>
+                    <strong>
+                        六關全部完成！
+                    </strong>
 
-                        恭喜你！
+                    <br><br>
 
-                        <br>
+                    恭喜你！
 
-                        現在可以送出抽獎資料。
+                    <br>
 
-                    </div>
+                    現在可以送出抽獎資料。
 
+                </div>
 
-                    <button
-                        onclick="showLotterySubmit()"
-                    >
-                        🎟️ 送出抽獎資料
-                    </button>
+                <button
+                    type="button"
+                    onclick="showLotterySubmit()"
+                >
+                    🎟️ 送出抽獎資料
+                </button>
 
-                `
-                : `
+            `
+            : `
 
-                    <button
-                        onclick="loadProgress()"
-                    >
-                        ▶️ 查看闖關進度
-                    </button>
+                <button
+                    type="button"
+                    onclick="loadProgress()"
+                >
+                    ▶️ 查看闖關進度
+                </button>
 
-                `
-        }
+            `
+    }
 
-    `;
+`;
 
 }
-
 
 // ==================================================
 // 抽獎送出確認
@@ -1621,35 +1821,233 @@ function showMissionSuccess(
 
 function showLotterySubmit() {
 
-    restoreSession();
+restoreSession();
 
+const container =
+    getElement("app");
 
-    const container =
-        document.getElementById(
-            "app"
-        );
+container.innerHTML = `
 
+    <div class="logo">
+        🏆
+    </div>
 
-    container.innerHTML = `
+    <h1>
+        六關全部完成！
+    </h1>
 
-        <div class="logo">
-            🏆
+    <div class="lottery">
+
+        <div class="lottery-icon">
+            🎊
         </div>
 
-        <h1>
-            六關全部完成！
-        </h1>
+        恭喜完成全部六關！
 
+        <br><br>
 
-        <div class="lottery">
+        姓名：
 
-            <div class="lottery-icon">
-                🎊
-            </div>
+        <strong>
+            ${escapeHtml(
+                currentDisplayName
+            )}
+        </strong>
 
-            恭喜完成全部六關！
+        <br>
 
-            <br><br>
+        工號：
+
+        <strong>
+            ${escapeHtml(
+                currentEmployeeNo
+            )}
+        </strong>
+
+        <br><br>
+
+        <strong>
+            確認要送出抽獎資料嗎？
+        </strong>
+
+    </div>
+
+    <button
+        type="button"
+        id="lotteryButton"
+        onclick="submitLottery(this)"
+    >
+        🎟️ 確認送出抽獎資料
+    </button>
+
+    <button
+        type="button"
+        class="secondary"
+        onclick="loadProgress()"
+    >
+        返回
+    </button>
+
+    <div
+        id="message"
+        class="message"
+    ></div>
+
+`;
+
+}
+
+// ==================================================
+// 送出抽獎資料
+// ==================================================
+
+async function submitLottery(
+button
+) {
+
+if (!button) {
+
+    button =
+        getElement(
+            "lotteryButton"
+        );
+
+}
+
+if (button) {
+
+    button.disabled =
+        true;
+
+    button.innerText =
+        "資料上傳中...";
+
+}
+
+try {
+
+    restoreSession();
+
+    if (
+        !currentLineUserId ||
+        !currentEmployeeNo
+    ) {
+
+        throw new Error(
+            "登入資料遺失，請重新登入"
+        );
+
+    }
+
+    const response =
+        await fetch(
+            `${API_BASE}/api/game/submit-lottery`,
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/json",
+
+                    "Accept":
+                        "application/json"
+                },
+
+                body:
+                    JSON.stringify({
+
+                        lineUserId:
+                            currentLineUserId,
+
+                        employeeNo:
+                            currentEmployeeNo
+
+                    })
+            }
+        );
+
+    const result =
+        await readJson(response);
+
+    if (!response.ok) {
+
+        throw new Error(
+            result.message ||
+            `抽獎資料上傳失敗（HTTP ${response.status}）`
+        );
+
+    }
+
+    if (result.success !== true) {
+
+        throw new Error(
+            result.message ||
+            "抽獎資料上傳失敗"
+        );
+
+    }
+
+    showLotterySuccess();
+
+}
+catch (error) {
+
+    console.error(
+        "[LOTTERY] 錯誤:",
+        error
+    );
+
+    if (button) {
+
+        button.disabled =
+            false;
+
+        button.innerText =
+            "🎟️ 確認送出抽獎資料";
+
+    }
+
+    showError(
+        error.message ||
+        "抽獎資料上傳失敗"
+    );
+
+}
+
+}
+
+// ==================================================
+// 抽獎成功畫面
+// ==================================================
+
+function showLotterySuccess() {
+
+restoreSession();
+
+const container =
+    getElement("app");
+
+container.innerHTML = `
+
+    <div class="logo">
+        🎊
+    </div>
+
+    <h1>
+        資料已上傳！
+    </h1>
+
+    <div class="lottery">
+
+        <div class="lottery-icon">
+            🎟️
+        </div>
+
+        <h2>
+            已取得抽獎資格
+        </h2>
+
+        <p>
 
             姓名：
 
@@ -1659,7 +2057,9 @@ function showLotterySubmit() {
                 )}
             </strong>
 
-            <br>
+        </p>
+
+        <p>
 
             工號：
 
@@ -1669,388 +2069,201 @@ function showLotterySubmit() {
                 )}
             </strong>
 
-            <br><br>
+        </p>
 
-            <strong>
-                確認要送出抽獎資料嗎？
-            </strong>
+        <hr>
 
-        </div>
+        <p class="success">
 
+            ✅ 六關完成
 
-        <button
-            id="lotteryButton"
-            onclick="submitLottery(this)"
-        >
-            🎟️ 確認送出抽獎資料
-        </button>
+            <br>
 
+            ✅ 抽獎資料已上傳
 
-        <button
-            class="secondary"
-            onclick="loadProgress()"
-        >
-            返回
-        </button>
+            <br>
 
-
-        <div
-            id="message"
-            class="message"
-        ></div>
-
-    `;
-
-}
-
-
-// ==================================================
-// 送出抽獎資料
-// ==================================================
-
-async function submitLottery(
-    button
-) {
-
-    if (!button) {
-
-        button =
-            document.getElementById(
-                "lotteryButton"
-            );
-
-    }
-
-
-    if (button) {
-
-        button.disabled = true;
-
-        button.innerText =
-            "資料上傳中...";
-
-    }
-
-
-    try {
-
-        restoreSession();
-
-
-        if (
-            !currentLineUserId ||
-            !currentEmployeeNo
-        ) {
-
-            throw new Error(
-                "登入資料遺失，請重新登入"
-            );
-
-        }
-
-
-        const response =
-            await fetch(
-                `${API_BASE}/api/game/submit-lottery`,
-                {
-                    method: "POST",
-
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
-
-                    body:
-                        JSON.stringify({
-
-                            lineUserId:
-                                currentLineUserId,
-
-                            employeeNo:
-                                currentEmployeeNo
-
-                        })
-                }
-            );
-
-
-        const result =
-            await response.json();
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                result.message ||
-                "抽獎資料上傳失敗"
-            );
-
-        }
-
-
-        // ==========================================
-        // 上傳成功
-        // ==========================================
-
-        showLotterySuccess();
-
-    }
-    catch (error) {
-
-        console.error(error);
-
-
-        if (button) {
-
-            button.disabled = false;
-
-            button.innerText =
-                "🎟️ 確認送出抽獎資料";
-
-        }
-
-
-        showError(
-            error.message
-        );
-
-    }
-
-}
-
-
-// ==================================================
-// 抽獎成功畫面
-// ==================================================
-
-function showLotterySuccess() {
-
-    restoreSession();
-
-
-    const container =
-        document.getElementById(
-            "app"
-        );
-
-
-    container.innerHTML = `
-
-        <div class="logo">
-            🎊
-        </div>
-
-        <h1>
-            資料已上傳！
-        </h1>
-
-
-        <div class="lottery">
-
-            <div class="lottery-icon">
-                🎟️
-            </div>
-
-            <h2>
-                已取得抽獎資格
-            </h2>
-
-
-            <p>
-
-                姓名：
-
-                <strong>
-                    ${escapeHtml(
-                        currentDisplayName
-                    )}
-                </strong>
-
-            </p>
-
-
-            <p>
-
-                工號：
-
-                <strong>
-                    ${escapeHtml(
-                        currentEmployeeNo
-                    )}
-                </strong>
-
-            </p>
-
-
-            <hr>
-
-
-            <p class="success">
-
-                ✅ 六關完成
-
-                <br>
-
-                ✅ 抽獎資料已上傳
-
-                <br>
-
-                ✅ 已取得抽獎資格
-
-            </p>
-
-        </div>
-
-
-        <p class="small">
-
-            請依現場工作人員指示
-            進行後續抽獎。
+            ✅ 已取得抽獎資格
 
         </p>
 
-    `;
+    </div>
+
+    <p class="small">
+
+        請依現場工作人員指示
+        進行後續抽獎。
+
+    </p>
+
+`;
 
 }
 
-
 // ==================================================
-// 錯誤訊息
+// 顯示錯誤
 // ==================================================
 
 function showError(
-    message
+message
 ) {
 
-    const element =
-        document.getElementById(
-            "message"
-        );
+const element =
+    getElement("message");
 
+if (!element) {
 
-    if (!element) {
+    alert(message);
 
-        alert(message);
-
-        return;
-
-    }
-
-
-    element.innerHTML =
-
-        `<span class="error">
-            ❌
-            ${escapeHtml(
-                message
-            )}
-        </span>`;
+    return;
 
 }
 
+element.innerHTML =
+
+    `<span class="error">
+        ❌
+        ${escapeHtml(
+            message
+        )}
+    </span>`;
+
+}
 
 // ==================================================
 // 錯誤頁面
 // ==================================================
 
 function showErrorPage(
-    message
+message
 ) {
 
-    const container =
-        document.getElementById(
-            "app"
-        );
+const container =
+    getElement("app");
 
+container.innerHTML = `
 
-    container.innerHTML = `
+    <div class="logo">
+        ❌
+    </div>
 
-        <div class="logo">
-            ❌
-        </div>
+    <h1>
+        闖關失敗
+    </h1>
 
-        <h1>
-            闖關失敗
-        </h1>
+    <div class="lottery">
 
-        <div class="lottery">
+        <span class="error">
 
-            <span class="error">
+            ${escapeHtml(
+                message
+            )}
 
-                ${escapeHtml(
-                    message
-                )}
+        </span>
 
-            </span>
+    </div>
 
-        </div>
+    <button
+        type="button"
+        onclick="loadProgress()"
+    >
+        返回闖關首頁
+    </button>
 
-
-        <button
-            onclick="loadProgress()"
-        >
-            返回闖關首頁
-        </button>
-
-    `;
+`;
 
 }
-
 
 // ==================================================
 // HTML Escape
 // ==================================================
 
 function escapeHtml(
-    value
+value
 ) {
 
-    if (value == null) {
+if (value == null) {
 
-        return "";
-
-    }
-
-
-    return String(value)
-
-        .replaceAll(
-            "&",
-            "&amp;"
-        )
-
-        .replaceAll(
-            "<",
-            "&lt;"
-        )
-
-        .replaceAll(
-            ">",
-            "&gt;"
-        )
-
-        .replaceAll(
-            '"',
-            "&quot;"
-        )
-
-        .replaceAll(
-            "'",
-            "&#039;"
-        );
+    return "";
 
 }
 
+return String(value)
+
+    .replaceAll(
+        "&",
+        "&amp;"
+    )
+
+    .replaceAll(
+        "<",
+        "&lt;"
+    )
+
+    .replaceAll(
+        ">",
+        "&gt;"
+    )
+
+    .replaceAll(
+        '"',
+        "&quot;"
+    )
+
+    .replaceAll(
+        "'",
+        "&#039;"
+    );
+
+}
+
+// ==================================================
+// Enter 鍵也可以送出
+// ==================================================
+
+document.addEventListener(
+"keydown",
+function (event) {
+
+    if (
+        event.key === "Enter"
+    ) {
+
+        const employeeInput =
+            getElement(
+                "employeeNo"
+            );
+
+        if (
+            employeeInput &&
+            document.activeElement ===
+            employeeInput
+        ) {
+
+            event.preventDefault();
+
+            registerAndStart();
+
+        }
+
+    }
+
+}
+
+);
 
 // ==================================================
 // 啟動
 // ==================================================
 
-initLIFF();
+window.addEventListener(
+"load",
+function () {
 
+    initLIFF();
 
-</script>
+}
 
-</body>
+);
 
-</html>
+</script> </body> </html>
