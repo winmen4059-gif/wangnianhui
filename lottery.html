@@ -1,492 +1,97 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
-
 <head>
-
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>旺年會抽獎</title>
-
-    <link
-        rel="stylesheet"
-        href="./lottery.css"
-    >
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#fff5d6">
+    <title>旺年會幸運抽獎</title>
+    <link rel="stylesheet" href="./lottery.css">
 </head>
-
-
 <body>
-
     <main class="lottery-page">
+        <header class="header">
+            <div class="event-title">旺年會</div>
+            <h1>🎁 幸運抽獎</h1>
+            <p>祝大家好運，抽中豐富好禮！</p>
+        </header>
 
-
-        <!-- ================================================= -->
-        <!-- Header -->
-        <!-- ================================================= -->
-
-        <section class="header">
-
-            <div class="event-title">
-                旺年會
-            </div>
-
-            <h1>
-                🎁 幸運抽獎
-            </h1>
-
-            <p>
-                恭喜完成闖關，準備迎接你的好運！
-            </p>
-
+        <section id="loading" class="card message-card">
+            <div class="loading-spinner" aria-hidden="true"></div>
+            <p>正在載入抽獎資料...</p>
         </section>
 
-
-
-        <!-- ================================================= -->
-        <!-- Loading Screen -->
-        <!-- ================================================= -->
-
-        <section
-            id="loading"
-            class="card"
-        >
-
-            <div class="loading-spinner"></div>
-
-            <p id="loadingText">
-                正在初始化 LINE...
-            </p>
-
-        </section>
-
-
-
-        <!-- ================================================= -->
-        <!-- Login Screen -->
-        <!-- ================================================= -->
-
-        <section
-            id="loginScreen"
-            class="card hidden"
-        >
-
-            <div class="status-icon">
-                👤
-            </div>
-
-            <h2>
-                請輸入員工工號
-            </h2>
-
-            <p>
-                請輸入您的員工工號，
-                <br>
-                以確認旺年會抽獎資格。
-            </p>
-
-
-            <!-- Employee Number -->
-
-            <input
-                type="text"
-                id="employeeNoInput"
-                class="employee-input"
-                placeholder="請輸入員工工號"
-                autocomplete="off"
-                maxlength="50"
-            >
-
-
-            <!-- Login Button -->
-
-            <button
-                type="button"
-                id="loginButton"
-                class="draw-button"
-            >
-                🚀 登入並確認資格
+        <section id="error" class="card error-card hidden" role="alert">
+            <div class="error-icon" aria-hidden="true">⚠️</div>
+            <h2>系統發生錯誤</h2>
+            <p id="errorMessage">無法載入抽獎資料。</p>
+            <button id="retryButton" class="secondary-button" type="button">
+                重新載入
             </button>
-
-
-            <!-- Login Message -->
-
-            <div
-                id="loginMessage"
-                class="login-message"
-            ></div>
-
         </section>
 
+        <section id="mainScreen" class="hidden">
+            <section class="summary-grid">
+                <article class="card summary-card">
+                    <div class="summary-label">可抽獎人數</div>
+                    <div id="eligibleCount" class="summary-value">0</div>
+                </article>
 
-
-        <!-- ================================================= -->
-        <!-- Main Screen -->
-        <!-- ================================================= -->
-
-        <section
-            id="mainScreen"
-            class="hidden"
-        >
-
-
-            <!-- ================================================= -->
-            <!-- Participant -->
-            <!-- ================================================= -->
-
-            <section class="card participant-card">
-
-                <div class="participant-icon">
-                    👤
-                </div>
-
-                <div>
-
-                    <div class="participant-label">
-                        參加者
-                    </div>
-
-                    <div
-                        id="participantName"
-                        class="participant-name"
-                    >
-                        -
-                    </div>
-
-                </div>
-
+                <article class="card summary-card">
+                    <div class="summary-label">尚有名額獎項</div>
+                    <div id="availablePrizeCount" class="summary-value">0</div>
+                </article>
             </section>
 
-
-
-            <!-- ================================================= -->
-            <!-- Progress -->
-            <!-- ================================================= -->
-
-            <section class="card progress-card">
-
-                <div class="progress-header">
-
-                    <div class="progress-title">
-                        🎯 闖關進度
-                    </div>
-
-                    <div
-                        id="progressText"
-                        class="progress-text"
-                    >
-                        0 / 6
-                    </div>
-
-                </div>
-
-
-                <div class="progress-bar">
-
-                    <div
-                        id="progressBar"
-                        class="progress-fill"
-                        style="width: 0%;"
-                    ></div>
-
-                </div>
-
-
-                <div
-                    id="missionProgress"
-                    class="mission-progress"
-                ></div>
-
+            <section class="card status-card" aria-live="polite">
+                <div class="status-icon" aria-hidden="true">🎟️</div>
+                <h2 id="statusTitle">抽獎準備中</h2>
+                <p id="statusMessage">正在確認抽獎名單與獎項...</p>
             </section>
 
-
-
-            <!-- ================================================= -->
-            <!-- Lottery Area -->
-            <!-- ================================================= -->
-
-            <section
-                id="lotteryArea"
-            >
-
-
-                <!-- ================================================= -->
-                <!-- Lottery Status -->
-                <!-- ================================================= -->
-
-                <section
-                    id="statusCard"
-                    class="card status-card"
-                >
-
-                    <div class="status-icon">
-                        🎟️
-                    </div>
-
-                    <h2 id="statusTitle">
-                        抽獎資格確認中
-                    </h2>
-
-                    <p id="statusMessage">
-                        正在確認您的抽獎資格...
-                    </p>
-
-                </section>
-
-
-
-                <!-- ================================================= -->
-                <!-- Draw Card -->
-                <!-- ================================================= -->
-
-                <section
-                    id="drawCard"
-                    class="draw-card"
-                >
-
-                    <div class="gift-animation">
-
-                        <div class="gift">
-                            🎁
-                        </div>
-
-                    </div>
-
-
-                    <h2>
-                        準備好了嗎？
-                    </h2>
-
-
-                    <p>
-                        按下按鈕，
-                        <br>
-                        看看今天的幸運獎項！
-                    </p>
-
-
-                    <button
-                        type="button"
-                        id="drawButton"
-                        class="draw-button"
-                    >
-                        🎰 開始抽獎
-                    </button>
-
-                </section>
-
-
-
-                <!-- ================================================= -->
-                <!-- Drawing Card -->
-                <!-- ================================================= -->
-
-                <section
-                    id="drawingCard"
-                    class="drawing-card hidden"
-                >
-
-                    <div class="drawing-stars">
-                        ✨ 🎁 ✨ 🎁 ✨
-                    </div>
-
-
-                    <div
-                        id="countdown"
-                        class="countdown"
-                    >
-                        3
-                    </div>
-
-
-                    <h2>
-                        幸運抽獎中...
-                    </h2>
-
-
-                    <p>
-                        請稍候
-                    </p>
-
-                </section>
-
-
-
-                <!-- ================================================= -->
-                <!-- Result Card -->
-                <!-- ================================================= -->
-
-                <section
-                    id="resultCard"
-                    class="result-card hidden"
-                >
-
-
-                    <!-- Result Icon -->
-
-                    <div
-                        id="resultIcon"
-                        class="result-icon"
-                    >
-                        🎉
-                    </div>
-
-
-                    <!-- Result Title -->
-
-                    <div class="result-title">
-                        🎊 恭喜您！
-                    </div>
-
-
-                    <!-- Prize Name -->
-
-                    <div
-                        id="prizeName"
-                        class="prize-name"
-                    >
-                        恭喜中獎
-                    </div>
-
-
-                    <!-- Prize Description -->
-
-                    <div
-                        id="prizeDescription"
-                        class="prize-description"
-                    >
-                        -
-                    </div>
-
-
-                    <!-- Result Message -->
-
-                    <div
-                        id="resultMessage"
-                        class="result-message"
-                    >
-                        -
-                    </div>
-
-
-                    <!-- Draw Again -->
-
-                    <button
-                        type="button"
-                        id="drawAgainButton"
-                        class="draw-button hidden"
-                    >
-                        🎁 再抽一次
-                    </button>
-
-
-                    <!-- Close Result -->
-
-                    <button
-                        type="button"
-                        id="closeResultButton"
-                        class="secondary-button"
-                    >
-                        返回抽獎頁面
-                    </button>
-
-                </section>
-
-
-
-                <!-- ================================================= -->
-                <!-- Winner History -->
-                <!-- ================================================= -->
-
-                <section class="card history-card">
-
-
-                    <div class="history-title">
-                        🏆 我的中獎紀錄
-                    </div>
-
-
-                    <div
-                        id="winnerList"
-                        class="winner-list"
-                    >
-
-                        <div class="empty-history">
-                            目前還沒有中獎紀錄
-                        </div>
-
-                    </div>
-
-                </section>
-
-
+            <section id="drawCard" class="draw-card">
+                <div class="gift" aria-hidden="true">🎁</div>
+                <h2>準備好抽出幸運得主了嗎？</h2>
+                <p>按下按鈕，由系統從合資格名單抽出得獎者。</p>
+                <button id="drawButton" class="draw-button" type="button" disabled>
+                    正在確認抽獎資料...
+                </button>
             </section>
 
+            <section id="drawingCard" class="drawing-card hidden" aria-live="assertive">
+                <div class="sparkles" aria-hidden="true">✨ 🎁 ✨</div>
+                <div id="countdown" class="countdown">3</div>
+                <h2>抽獎中...</h2>
+                <p>請稍候</p>
+            </section>
 
+            <section id="resultCard" class="result-card hidden" aria-live="polite">
+                <div class="result-icon" aria-hidden="true">🎉</div>
+                <div class="result-title">恭喜得獎！</div>
+                <div id="winnerName" class="winner-name">-</div>
+                <div id="prizeName" class="prize-name">-</div>
+                <div id="prizeDescription" class="prize-description"></div>
+                <div id="resultMessage" class="result-message"></div>
+                <button id="continueButton" class="secondary-button" type="button">
+                    繼續抽獎
+                </button>
+            </section>
+
+            <section class="card prize-card">
+                <h2>🎁 獎項剩餘名額</h2>
+                <div id="prizeList" class="prize-list">
+                    <div class="empty-message">目前沒有獎項資料</div>
+                </div>
+            </section>
+
+            <section class="card history-card">
+                <h2>🏆 得獎紀錄</h2>
+                <div id="winnerHistory" class="winner-list">
+                    <div class="empty-message">目前還沒有得獎紀錄</div>
+                </div>
+            </section>
         </section>
-
-
-        <!-- ================================================= -->
-        <!-- Error -->
-        <!-- ================================================= -->
-
-        <section
-            id="error"
-            class="card error-card hidden"
-        >
-
-            <div class="error-icon">
-                ⚠️
-            </div>
-
-
-            <h2>
-                系統發生錯誤
-            </h2>
-
-
-            <p id="errorMessage">
-                發生錯誤，請稍後再試。
-            </p>
-
-
-            <button
-                type="button"
-                id="retryButton"
-                class="secondary-button"
-            >
-                🔄 重新整理
-            </button>
-
-        </section>
-
-
     </main>
 
-
-
-    <!-- ================================================= -->
-    <!-- LINE LIFF SDK -->
-    <!-- ================================================= -->
-
-    <script
-        src="https://static.line-scdn.net/liff/edge/2/sdk.js"
-    ></script>
-
-
-    <!-- ================================================= -->
-    <!-- Lottery JavaScript -->
-    <!-- ================================================= -->
-
-    <script
-        src="./lottery.js"
-    ></script>
-
-
+    <script src="./lottery.js"></script>
 </body>
-
 </html>
